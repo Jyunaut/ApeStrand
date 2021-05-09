@@ -8,7 +8,7 @@ namespace Player
     public class Controller : MonoBehaviour
     {
         public readonly PlayerInput playerInput = new PlayerInput();
-        public State playerState;
+        public State stateMachine;
         [HideInInspector] public Rigidbody2D rigidbody2d;
         [HideInInspector] public Animator animator;
         [HideInInspector] public SpriteRenderer spriteRenderer;
@@ -32,11 +32,11 @@ namespace Player
 
         public void SetState(State state)
         {
-            if (playerState != null)
-                playerState.ExitState();
+            if (stateMachine != null)
+                stateMachine.ExitState();
 
-            playerState = state;
-            playerState.EnterState();
+            stateMachine = state;
+            stateMachine.EnterState();
         }
 
         public void EnableMovement() => canMove = true;
@@ -44,13 +44,13 @@ namespace Player
 
         void FixedUpdate()
         {
-            playerState.DoStateBehaviourFixedUpdate();
+            stateMachine.DoStateBehaviourFixedUpdate();
         }
 
         void Update()
         {
-            playerState.DoStateBehaviour();
-            playerState.Transitions();
+            stateMachine.DoStateBehaviour();
+            stateMachine.Transitions();
         }
     }
 }
