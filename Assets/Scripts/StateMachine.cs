@@ -1,4 +1,4 @@
-public abstract class State
+public abstract class StateMachine
 {
     public virtual void EnterState() {}
     public virtual void DoStateBehaviour() {}

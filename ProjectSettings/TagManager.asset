@@ -41,15 +41,9 @@ TagManager:
   - name: Background
     uniqueID: 1166765353
     locked: 0
-  - name: Background Effects
-    uniqueID: 193282843
-    locked: 0
-  - name: Raft
-    uniqueID: 2234697881
-    locked: 0
-  - name: Raft Effects
-    uniqueID: 3711549125
-    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Player
+    uniqueID: 2235266555
     locked: 0

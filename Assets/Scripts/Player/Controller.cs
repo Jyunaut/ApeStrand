@@ -8,11 +8,12 @@ namespace Player
     public class Controller : MonoBehaviour
     {
         public readonly PlayerInput playerInput = new PlayerInput();
-        public PlayerState playerState;
+        public State playerState;
         [HideInInspector] public Rigidbody2D rigidbody2d;
         [HideInInspector] public Animator animator;
         [HideInInspector] public SpriteRenderer spriteRenderer;
-        [HideInInspector] public Vector2 direction = new Vector2(0, 0);
+        [HideInInspector] public Vector2 direction;
+        [HideInInspector] public Vector2 velocity;
 
         public float speed = 5f;
         public bool canMove { get; private set; } = true;
@@ -29,7 +30,7 @@ namespace Player
             SetState(new Idle(this));
         }
 
-        public void SetState(PlayerState state)
+        public void SetState(State state)
         {
             if (playerState != null)
                 playerState.ExitState();
