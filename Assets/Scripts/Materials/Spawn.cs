@@ -26,10 +26,10 @@ public class Spawn : MonoBehaviour
     void Update()
     {
         curTime += Time.deltaTime;
-        Debug.Log(curTime);
         if(curTime >= nextSpawn)
         {
-            Instantiate(objects[Random.Range(0, objects.Length)], new Vector2(Random.Range(spawnMin.x, spawnMax.x), Random.Range(spawnMin.y, spawnMax.y)), Quaternion.identity);
+            GameObject  i = Instantiate(objects[Random.Range(0, objects.Length)], new Vector2(Random.Range(spawnMin.x, spawnMax.x), Random.Range(spawnMin.y, spawnMax.y)), Quaternion.identity);
+            i.GetComponent<Drift>().Camera = Camera;
             nextSpawn = curTime + spawnRate;
         }
     }
