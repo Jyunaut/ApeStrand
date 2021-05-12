@@ -61,8 +61,8 @@ namespace Player
 
     class Move : State
     {
-        private Vector2 prevPos;
-        private float timer;
+        private Vector2 _prevPos;
+        private float _timer;
 
         public Move(Controller controller) : base(controller) {}
 
@@ -81,16 +81,16 @@ namespace Player
         private void MovePlayer()
         {
             controller.direction = new Vector2(controller.playerInput.Horizontal, controller.playerInput.Vertical).normalized;
-            controller.velocity = controller.rigidbody2d.position + controller.direction * controller.speed * Time.fixedDeltaTime;
+            controller.velocity = controller.rigidbody2d.position + controller.direction * controller.Speed * Time.fixedDeltaTime;
             controller.rigidbody2d.MovePosition(controller.velocity);
-            prevPos = controller.rigidbody2d.position;
+            _prevPos = controller.rigidbody2d.position;
         }
     }
 
     class Dodge : State
     {
-        private float dodgeSpeed = 2f;
-        private float dodgeTimer;
+        private float _dodgeSpeed = 2f;
+        private float _dodgeTimer;
 
         public Dodge(Controller controller) : base(controller) {}
 
@@ -98,21 +98,21 @@ namespace Player
         {
             controller.DisableMovement();
 
-            dodgeTimer = 0.2f;
+            _dodgeTimer = 0.2f;
         }
 
         public override void DoStateBehaviourFixedUpdate()
         {
             controller.spriteRenderer.color = new UnityEngine.Color(0, 127, 0);
-            controller.rigidbody2d.MovePosition(controller.rigidbody2d.position + controller.direction * dodgeSpeed * dodgeTimer);
+            controller.rigidbody2d.MovePosition(controller.rigidbody2d.position + controller.direction * _dodgeSpeed * _dodgeTimer);
 
-            dodgeTimer -= Time.fixedDeltaTime;
-            if (dodgeTimer <= 0) controller.EnableMovement();
+            _dodgeTimer -= Time.fixedDeltaTime;
+            if (_dodgeTimer <= 0) controller.EnableMovement();
         }
 
         public override void Transitions()
         {
-            if (dodgeTimer > 0) return;
+            if (_dodgeTimer > 0) return;
             if      (Move()) {}
             else if (Idle()) {}
         }
