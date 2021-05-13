@@ -13,15 +13,27 @@ public class PlatformCollider : MonoBehaviour
         _raft = GameObject.FindGameObjectWithTag("Raft");
     }
 
+    void OnEnable()
+    {
+        EventManager.Damaged += CheckNeighbours;
+    }
+
+    void OnDisable()
+    {
+        EventManager.Damaged -= CheckNeighbours;
+    }
+
     void Start()
     {
         CheckNeighbours();
-        transform.parent = _raft.transform;
     }
-    // TODO: Add Unity Event feature which calls this function each time something happens to the raft
-    public void CheckNeighbours()
+
+    void CheckNeighbours()
     {
         if (!_raft) return;
+
+        // Unparent all platforms so the raycast can detect each other
+        transform.parent = null;
 
         // Check right
         RaycastHit2D[] hits = new RaycastHit2D[2];
@@ -107,5 +119,7 @@ public class PlatformCollider : MonoBehaviour
                 break;
             }   
         }
+        // Parent all platforms to the raft with updated collider sizes
+        transform.parent = _raft.transform;
     }
 }
