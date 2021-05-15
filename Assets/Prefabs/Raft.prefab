@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5699383191601705715}
   - component: {fileID: 319346960398992797}
   - component: {fileID: 1602721388207731161}
+  - component: {fileID: 4137506833961885013}
   m_Layer: 6
   m_Name: Raft
   m_TagString: Raft
@@ -75,3 +76,16 @@ CompositeCollider2D:
     m_Paths: []
   m_VertexDistance: 0.0005
   m_OffsetDistance: 0.00005
+--- !u!114 &4137506833961885013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4083017273997406390}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ae460a2972417647a10ac7f15213400, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Platforms: []
