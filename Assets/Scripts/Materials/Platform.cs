@@ -17,16 +17,15 @@ public class Platform : MonoBehaviour, IDamageable
     */
     void CheckAdjacent()
     {
-        System.Func<int, bool> IsEven = (int i) => i % 2 == 0;
-
-        float yOffset = 1.755f - 0.9225f; // Calculated from the edge collider height
-        float xLen    = 1.5f;
-        float yLen    = 1.25f;
-        float rot     = 90; // Rotation in degrees
+        float yOffset  = 1.755f - 0.9225f; // Calculated from the edge collider height
         Vector2 origin = (Vector2)transform.position + new Vector2(0, yOffset);
+        float rotation = 90;
+        float xLen     = 1.5f;
+        float yLen     = 1.25f;
         for (int i = 0; i < 4; i++)
         {
-            Vector2 direction = new Vector2(Mathf.Cos(i * rot * Mathf.Deg2Rad), Mathf.Sin(i * rot * Mathf.Deg2Rad));
+            float angle = i * rotation * Mathf.Deg2Rad;
+            Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
             float length = xLen * Mathf.Abs(direction.x) + yLen * Mathf.Abs(direction.y);
             RaycastHit2D[] hits = Physics2D.RaycastAll(origin, direction, length, LayerMask.GetMask("Platform"))
                                            .Where(hit => hit.collider.gameObject != gameObject).ToArray();
