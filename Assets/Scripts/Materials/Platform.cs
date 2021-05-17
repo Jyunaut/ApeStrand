@@ -7,20 +7,19 @@ public class Platform : MonoBehaviour, IDamageable
     [SerializeField]
     private EdgeCollider2D[] _walls = new EdgeCollider2D[4];
 
-    public List<GameObject> _adjacentPlatforms = new List<GameObject>();
+    [SerializeField]
+    private List<GameObject> _adjacentPlatforms = new List<GameObject>();
 
-    // TODO: Send a message to all adjacent platforms to update their colliders
     public void TakeDamage()
     {
         print(gameObject.name + " takes damage");
-        UpdateColliders();
     }
 
     /*--------------------------------------------------------------------------------------------- 
     * Cast a ray in all four directions (right, up, left, down) and check if there is a platform
     * adjacent to this one.  If there is an adjacent platform, disable the corresponding edge collider.
     */
-    void UpdateColliders()
+    public void UpdateColliders()
     {
         _adjacentPlatforms = new List<GameObject>();
 
@@ -53,8 +52,20 @@ public class Platform : MonoBehaviour, IDamageable
         }
     }
 
+    void DestroyRaft()
+    {
+        Destroy(gameObject);
+        foreach (var platform in _adjacentPlatforms)
+            platform.GetComponent<Platform>().UpdateColliders();
+    }
+
+    void Start()
+    {
+        UpdateColliders();
+    }
+
     void OnMouseDown()
     {
-        TakeDamage();
+        DestroyRaft();
     }
 }
