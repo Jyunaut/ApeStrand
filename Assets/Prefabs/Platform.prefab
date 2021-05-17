@@ -12,12 +12,12 @@ GameObject:
   - component: {fileID: 388307027116359503}
   - component: {fileID: 8125752455025829147}
   - component: {fileID: 3526070810551569956}
-  - component: {fileID: 470818035807256337}
   - component: {fileID: -6027760358575516397}
   - component: {fileID: 9138500056938344538}
   - component: {fileID: 6789094603302314376}
   - component: {fileID: 305521949078145270}
   - component: {fileID: 4444871998644280519}
+  - component: {fileID: 470818035807256337}
   m_Layer: 6
   m_Name: Platform
   m_TagString: Untagged
@@ -122,23 +122,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &470818035807256337
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 388307027116359500}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 66c4f13280d17a940b03ba25111ec957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _walls:
-  - {fileID: 9138500056938344538}
-  - {fileID: 6789094603302314376}
-  - {fileID: 305521949078145270}
-  - {fileID: 4444871998644280519}
 --- !u!61 &-6027760358575516397
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -253,6 +236,24 @@ EdgeCollider2D:
   m_AdjacentEndPoint: {x: 0, y: 0}
   m_UseAdjacentStartPoint: 0
   m_UseAdjacentEndPoint: 0
+--- !u!114 &470818035807256337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 388307027116359500}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66c4f13280d17a940b03ba25111ec957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _walls:
+  - {fileID: 9138500056938344538}
+  - {fileID: 6789094603302314376}
+  - {fileID: 305521949078145270}
+  - {fileID: 4444871998644280519}
+  _adjacentPlatforms: []
 --- !u!1001 &4449491917804862158
 PrefabInstance:
   m_ObjectHideFlags: 0

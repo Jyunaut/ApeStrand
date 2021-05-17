@@ -54,8 +54,8 @@ namespace Player
 
         public override void Transitions()
         {
-            if      (Dodge()) {}
-            else if (Move())  {}
+            //if      (Dodge()) {}
+            /*else */if (Move())  {}
         }
     }
 
@@ -74,8 +74,8 @@ namespace Player
 
         public override void Transitions()
         {
-            if      (Dodge()) {}
-            else if (Idle())  {}
+            //if      (Dodge()) {}
+            /*else */if (Idle())  {}
         }
 
         private void MovePlayer()
