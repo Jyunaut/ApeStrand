@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Platform : MonoBehaviour, IDamageable
+public class Platform : RaftObject, IDamageable
 {
     [SerializeField]
     private EdgeCollider2D[] _walls = new EdgeCollider2D[4];
@@ -10,12 +10,18 @@ public class Platform : MonoBehaviour, IDamageable
     [SerializeField]
     private List<GameObject> _adjacentPlatforms = new List<GameObject>();
 
+    protected override void Start()
+    {
+        base.Start();
+        UpdateColliders();
+    }
+
     public void TakeDamage()
     {
         print(gameObject.name + " takes damage");
     }
 
-    /*--------------------------------------------------------------------------------------------- 
+    /* ============================================================================================ 
     * Cast a ray in all four directions (right, up, left, down) and check if there is a platform
     * adjacent to this one.  If there is an adjacent platform, disable the corresponding edge collider.
     */
@@ -37,12 +43,14 @@ public class Platform : MonoBehaviour, IDamageable
                                            .Where(hit => hit.collider.gameObject != gameObject).ToArray();
             // Debug.DrawLine(origin, origin + new Vector2(xLen * direction.x, yLen * direction.y), Color.red);
             
+            // Enable wall collider if no adjacent platform found
             if (hits.Length == 0)
             {
                 _walls[i].enabled = true;
                 continue;
             }
 
+            // Store a list of adjacent platforms
             foreach (var hit in hits)
             {
                 _walls[i].enabled = false;
@@ -55,13 +63,10 @@ public class Platform : MonoBehaviour, IDamageable
     void DestroyRaft()
     {
         Destroy(gameObject);
+
+        // Update the colliders of adjacent platforms
         foreach (var platform in _adjacentPlatforms)
             platform.GetComponent<Platform>().UpdateColliders();
-    }
-
-    void Start()
-    {
-        UpdateColliders();
     }
 
     void OnMouseDown()

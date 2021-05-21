@@ -68,7 +68,8 @@ namespace Player
 
         public override void DoStateBehaviourFixedUpdate()
         {
-            MovePlayer();
+            //MovePlayer();
+            Manager.RaftManager.Instance.MoveRaft(new Vector2(controller.playerInput.Horizontal, controller.playerInput.Vertical));
             controller.spriteRenderer.color = new UnityEngine.Color(127, 0, 0);
         }
 

@@ -5,7 +5,7 @@ namespace Player
     [RequireComponent(typeof(SpriteRenderer))]
     [RequireComponent(typeof(Animator))]
     [RequireComponent(typeof(Rigidbody2D))]
-    public class Controller : MonoBehaviour
+    public class Controller : RaftObject
     {
         [SerializeField] [Range(0, 10)]
         private float _speed = 5f;
@@ -32,8 +32,9 @@ namespace Player
             spriteRenderer = GetComponent<SpriteRenderer>();
         }
 
-        void Start()
+        protected override void Start()
         {
+            base.Start();
             SetState(new Idle(this));
         }
 
