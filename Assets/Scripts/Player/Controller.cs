@@ -5,52 +5,60 @@ namespace Player
     [RequireComponent(typeof(SpriteRenderer))]
     [RequireComponent(typeof(Animator))]
     [RequireComponent(typeof(Rigidbody2D))]
-    public class Controller : MonoBehaviour
+    public class Controller : RaftObject
     {
-        public readonly PlayerInput playerInput = new PlayerInput();
-        public State playerState;
-        [HideInInspector] public Rigidbody2D rigidbody2d;
-        [HideInInspector] public Animator animator;
-        [HideInInspector] public SpriteRenderer spriteRenderer;
-        [HideInInspector] public Vector2 direction;
-        [HideInInspector] public Vector2 velocity;
+        [SerializeField] [Range(0, 10)]
+        private float _speed = 5f;
+        private float _speedMultiplier = 1f;
+        public float Speed { get => _speed * _speedMultiplier; }
 
-        public float speed = 5f;
         public bool canMove { get; private set; } = true;
+        [HideInInspector]
+        public Vector2 direction;
+        [HideInInspector]
+        public Vector2 velocity;
+
+        public readonly PlayerInput playerInput = new PlayerInput();
+        public Animator animator             { get; private set; }
+        public Rigidbody2D rigidbody2d       { get; private set; }
+        public SpriteRenderer spriteRenderer { get; private set; }
+        
+        private State _stateMachine;
 
         void Awake()
         {
-            rigidbody2d = GetComponent<Rigidbody2D>();
             animator = GetComponent<Animator>();
+            rigidbody2d = GetComponent<Rigidbody2D>();
             spriteRenderer = GetComponent<SpriteRenderer>();
         }
 
-        void Start()
+        protected override void Start()
         {
+            base.Start();
             SetState(new Idle(this));
         }
 
         public void SetState(State state)
         {
-            if (playerState != null)
-                playerState.ExitState();
-
-            playerState = state;
-            playerState.EnterState();
+            _stateMachine?.ExitState();
+            _stateMachine = state;
+            _stateMachine.EnterState();
         }
 
+        public void SetSpeedMultiplier(float multiplier) => _speedMultiplier = Mathf.Clamp(multiplier, 0.1f, 4f);
+        public void ResetSpeedMultiplier() => _speedMultiplier = 1f;
         public void EnableMovement() => canMove = true;
         public void DisableMovement() => canMove = false;
 
         void FixedUpdate()
         {
-            playerState.DoStateBehaviourFixedUpdate();
+            _stateMachine.DoStateBehaviourFixedUpdate();
         }
 
         void Update()
         {
-            playerState.DoStateBehaviour();
-            playerState.Transitions();
+            _stateMachine.DoStateBehaviour();
+            _stateMachine.Transitions();
         }
     }
 }
