@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 4327670495754306664}
   - component: {fileID: 4327670495754306660}
   - component: {fileID: 4327670495754306671}
+  - component: {fileID: 2181613286711409336}
   m_Layer: 0
   m_Name: Monkey
   m_TagString: Raft Object
@@ -170,3 +171,17 @@ MonoBehaviour:
   _speed: 5
   direction: {x: 0, y: 0}
   velocity: {x: 0, y: 0}
+--- !u!114 &2181613286711409336
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4327670495754306668}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44bbf66bc08cb5046913faa5f833c641, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _platform: {fileID: 388307027116359500, guid: 0fda9e7a10ca15e4fa18b8e9b68df4bc, type: 3}
+  _buildDistance: 1

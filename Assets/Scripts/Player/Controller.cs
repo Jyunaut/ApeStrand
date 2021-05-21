@@ -40,9 +40,7 @@ namespace Player
 
         public void SetState(State state)
         {
-            if (_stateMachine != null)
-                _stateMachine.ExitState();
-
+            _stateMachine?.ExitState();
             _stateMachine = state;
             _stateMachine.EnterState();
         }

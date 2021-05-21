@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,7 +14,7 @@ namespace Manager
         {
             if (Instance != null && Instance != this)
             {
-                Destroy(this.gameObject);
+                Destroy(gameObject);
                 return;
             }
             Instance = this;
@@ -23,7 +22,7 @@ namespace Manager
 
         public void MoveRaft(Vector2 direction, float speed = 2f)
         {
-            foreach (var e in _raftObjects)
+            foreach (GameObject e in _raftObjects)
                 e.transform.Translate(speed * direction.normalized * Time.fixedDeltaTime);
         }
 

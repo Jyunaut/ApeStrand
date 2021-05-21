@@ -6,6 +6,7 @@ public class Platform : RaftObject, IDamageable
 {
     [SerializeField]
     private EdgeCollider2D[] _walls = new EdgeCollider2D[4];
+    public EdgeCollider2D[] GetWalls() => _walls;
 
     [SerializeField]
     private List<GameObject> _adjacentPlatforms = new List<GameObject>();
@@ -13,7 +14,10 @@ public class Platform : RaftObject, IDamageable
     protected override void Start()
     {
         base.Start();
+        // Update the colliders of this and adjacent platforms
         UpdateColliders();
+        foreach (GameObject platform in _adjacentPlatforms)
+            platform.GetComponent<Platform>().UpdateColliders();
     }
 
     public void TakeDamage()
@@ -29,11 +33,11 @@ public class Platform : RaftObject, IDamageable
     {
         _adjacentPlatforms = new List<GameObject>();
 
-        float yOffset  = 1.755f - 0.9225f; // Calculated from the edge collider height
+        const float yOffset  = 1.755f - 0.9225f; // Calculated from the edge collider height
         Vector2 origin = (Vector2)transform.position + new Vector2(0, yOffset);
-        float rotation = 90;
-        float xLen     = 1.5f;
-        float yLen     = 1.25f;
+        const float rotation = 90;
+        const float xLen     = 1.5f;
+        const float yLen     = 1.25f;
         for (int i = 0; i < 4; i++)
         {
             float angle = i * rotation * Mathf.Deg2Rad;
@@ -51,7 +55,7 @@ public class Platform : RaftObject, IDamageable
             }
 
             // Store a list of adjacent platforms
-            foreach (var hit in hits)
+            foreach (RaycastHit2D hit in hits)
             {
                 _walls[i].enabled = false;
                 if (!_adjacentPlatforms.Contains(hit.collider.gameObject))
@@ -65,7 +69,7 @@ public class Platform : RaftObject, IDamageable
         Destroy(gameObject);
 
         // Update the colliders of adjacent platforms
-        foreach (var platform in _adjacentPlatforms)
+        foreach (GameObject platform in _adjacentPlatforms)
             platform.GetComponent<Platform>().UpdateColliders();
     }
 

@@ -4,11 +4,11 @@ public class RaftObject : MonoBehaviour
 {
     protected virtual void Start()
     {
-        Manager.RaftManager.Instance.AddRaftObject(this.gameObject);
+        Manager.RaftManager.Instance.AddRaftObject(gameObject);
     }
 
     protected virtual void OnDestroy()
     {
-        Manager.RaftManager.Instance.RemoveRaftObject(this.gameObject);
+        Manager.RaftManager.Instance.RemoveRaftObject(gameObject);
     }
 }
