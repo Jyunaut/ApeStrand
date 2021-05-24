@@ -7,33 +7,32 @@ namespace Player
     [RequireComponent(typeof(Rigidbody2D))]
     public class Controller : RaftObject
     {
+        [SerializeField] private bool debug_canInteract;
+        [SerializeField] private bool debug_canPaddle;
+
         [SerializeField, Range(0, 10)]
         private float _speed = 5f;
         private float _speedMultiplier = 1f;
         public float Speed { get => _speed * _speedMultiplier; }
+        public void SetSpeedMultiplier(float multiplier) => _speedMultiplier = Mathf.Clamp(multiplier, 0.1f, 4f);
+        public bool CanMove { get; set; } = true;
+        public bool CanInteract { get; private set; } = false;
+        public bool CanPaddle { get; private set; } = false;
 
-        public bool canMove { get; private set; } = true;
-        public bool canInteract { get; private set; } = false;
-        public bool canPaddle { get; private set; } = false;
+        public Animator Animator             { get; private set; }
+        public Rigidbody2D Rigidbody2d       { get; private set; }
+        public SpriteRenderer SpriteRenderer { get; private set; }
 
-        [SerializeField] private bool debug_canInteract;
-        [SerializeField] private bool debug_canPaddle;
-
-        [HideInInspector] public Vector2 direction;
-        [HideInInspector] public Vector2 velocity;
-
-        public readonly PlayerInput playerInput = new PlayerInput();
-        public Animator animator             { get; private set; }
-        public Rigidbody2D rigidbody2d       { get; private set; }
-        public SpriteRenderer spriteRenderer { get; private set; }
+        public Vector2 Direction { get; set; }
+        public Vector2 Velocity { get; set; }
         
         private State _stateMachine;
 
         void Awake()
         {
-            animator = GetComponent<Animator>();
-            rigidbody2d = GetComponent<Rigidbody2D>();
-            spriteRenderer = GetComponent<SpriteRenderer>();
+            Animator = GetComponent<Animator>();
+            Rigidbody2d = GetComponent<Rigidbody2D>();
+            SpriteRenderer = GetComponent<SpriteRenderer>();
         }
 
         protected override void Start()
@@ -49,20 +48,18 @@ namespace Player
             _stateMachine.EnterState();
         }
 
-        public void SetSpeedMultiplier(float multiplier) => _speedMultiplier = Mathf.Clamp(multiplier, 0.1f, 4f);
-        public void SetMovement(bool canMove) => this.canMove = canMove;
 
         void OnTriggerStay2D(Collider2D col)
         {
             if (col.gameObject.layer == LayerMask.NameToLayer("Platform"))
             {
                 if (!(col is EdgeCollider2D)) return;
-                canPaddle = true;
-                print(canPaddle);
+                CanPaddle = true;
+                print(CanPaddle);
             }
             else
             {
-                canInteract = true;
+                CanInteract = true;
             }
         }
 
@@ -71,12 +68,12 @@ namespace Player
             if (col.gameObject.layer == LayerMask.NameToLayer("Platform"))
             {
                 if (!(col is EdgeCollider2D)) return;
-                canPaddle = false;
-                print(canPaddle);
+                CanPaddle = false;
+                print(CanPaddle);
             }
             else
             {
-                canInteract = false;
+                CanInteract = false;
             }
         }
 
@@ -89,8 +86,8 @@ namespace Player
         {
             _stateMachine.DoStateBehaviour();
             _stateMachine.Transitions();
-            debug_canInteract = canInteract;
-            debug_canPaddle = canPaddle;
+            debug_canInteract = CanInteract;
+            debug_canPaddle = CanPaddle;
         }
     }
 }
