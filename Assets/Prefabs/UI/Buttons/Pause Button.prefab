@@ -200,7 +200,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 6332250749625732196, guid: 3dcbe8012e6933b4ebbc488272706b22, type: 3}
         m_TargetAssemblyTypeName: Manager.UIManager, Assembly-CSharp
         m_MethodName: Pause
         m_Mode: 1
