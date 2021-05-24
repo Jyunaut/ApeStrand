@@ -6,10 +6,12 @@ public class SceneLoaderCallback : MonoBehaviour
 {
     private bool isFirstUpdate = true;
 
-    private void Update() {
-        if (isFirstUpdate) {
+    void Update()
+    {
+        if (isFirstUpdate)
+        {
             isFirstUpdate = false;
-            SceneLoader.LoaderCallBack();
+            Manager.SceneLoader.LoaderCallback();
         }
     }
 }

@@ -36,20 +36,20 @@ public class UIController : MonoBehaviour
     } */
     
     //UI buttons
-    public Button startBtn, newGameBtn;
+    // public Button startBtn, newGameBtn;
 
-    void Start() {
-        startBtn.onClick.AddListener(PlayGame);
-        newGameBtn.onClick.AddListener(LoadNewGame);
-    }
+    // void Start() {
+    //     startBtn.onClick.AddListener(PlayGame);
+    //     newGameBtn.onClick.AddListener(LoadNewGame);
+    // }
 
-    private void PlayGame() {
-        print("Play Game");
-        startBtn.gameObject.SetActive(false);
-    }
+    // private void PlayGame() {
+    //     print("Play Game");
+    //     startBtn.gameObject.SetActive(false);
+    // }
 
-    private void LoadNewGame() {
-        SceneLoader.Load(SceneLoader.Scene.Main);
-        print("Reset Game");
-    }
+    // private void LoadNewGame() {
+    //     SceneLoader.Load(SceneLoader.Scene.Main);
+    //     print("Reset Game");
+    // }
 }
