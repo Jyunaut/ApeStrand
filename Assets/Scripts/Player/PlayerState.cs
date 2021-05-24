@@ -25,9 +25,18 @@ namespace Player
         {
             if ((PlayerInput.Horizontal != 0
                 || PlayerInput.Vertical != 0)
-                && controller.canMove)
+                && controller.CanMove)
             {
                 controller.SetState(new Move(controller)); return true;
+            }
+            return false;
+        }
+
+        public bool Paddle()
+        {
+            if (PlayerInput.InteractHold && controller.CanPaddle)
+            {
+                controller.SetState(new Paddle(controller)); return true;
             }
             return false;
         }
@@ -39,12 +48,13 @@ namespace Player
 
         public override void DoStateBehaviour()
         {
-            controller.spriteRenderer.color = new UnityEngine.Color(255, 255, 255);
+            controller.SpriteRenderer.color = new UnityEngine.Color(255, 255, 255);
         }
 
         public override void Transitions()
         {
-            if (Move()) {}
+            if      (Move()) {}
+            else if (Paddle()) {}
         }
     }
 
@@ -58,21 +68,44 @@ namespace Player
         public override void DoStateBehaviourFixedUpdate()
         {
             MovePlayer();
-            controller.spriteRenderer.color = new UnityEngine.Color(127, 0, 0);
+            controller.SpriteRenderer.color = new UnityEngine.Color(127, 0, 0);
         }
 
         public override void Transitions()
         {
-            if (Idle()) {}
+            if      (Idle()) {}
+            else if (Paddle()) {}
         }
 
         private void MovePlayer()
         {
             if (Mathf.Abs(PlayerInput.Horizontal) > 0 || Mathf.Abs(PlayerInput.Vertical) > 0)
-                controller.direction = new Vector2(PlayerInput.Horizontal, PlayerInput.Vertical).normalized;
-            controller.velocity = controller.rigidbody2d.position + controller.direction * controller.Speed * Time.fixedDeltaTime;
-            controller.rigidbody2d.MovePosition(controller.velocity);
-            _prevPos = controller.rigidbody2d.position;
+                controller.Direction = new Vector2(PlayerInput.Horizontal, PlayerInput.Vertical).normalized;
+            controller.Velocity = controller.Rigidbody2d.position + controller.Direction * controller.Speed * Time.fixedDeltaTime;
+            controller.Rigidbody2d.MovePosition(controller.Velocity);
+            _prevPos = controller.Rigidbody2d.position;
+        }
+    }
+
+    class Paddle : State
+    {
+        public Paddle(Controller controller) : base(controller) {}
+
+        public override void DoStateBehaviour()
+        {
+            controller.SpriteRenderer.color = Color.green;
+        }
+
+        public override void DoStateBehaviourFixedUpdate()
+        {
+            Manager.RaftManager.Instance.MoveRaft(new Vector2(PlayerInput.Horizontal, PlayerInput.Vertical));
+        }
+
+        public override void Transitions()
+        {
+            if (PlayerInput.InteractHold) return;
+            if      (Idle()) {}
+            else if (Move()) {}
         }
     }
 }
