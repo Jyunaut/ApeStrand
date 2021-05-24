@@ -31,6 +31,15 @@ namespace Player
             }
             return false;
         }
+
+        public bool Paddle()
+        {
+            if (PlayerInput.InteractHold && controller.canPaddle)
+            {
+                controller.SetState(new Paddle(controller)); return true;
+            }
+            return false;
+        }
     }
 
     class Idle : State
@@ -44,7 +53,8 @@ namespace Player
 
         public override void Transitions()
         {
-            if (Move()) {}
+            if      (Move()) {}
+            else if (Paddle()) {}
         }
     }
 
@@ -63,7 +73,8 @@ namespace Player
 
         public override void Transitions()
         {
-            if (Idle()) {}
+            if      (Idle()) {}
+            else if (Paddle()) {}
         }
 
         private void MovePlayer()
@@ -73,6 +84,28 @@ namespace Player
             controller.velocity = controller.rigidbody2d.position + controller.direction * controller.Speed * Time.fixedDeltaTime;
             controller.rigidbody2d.MovePosition(controller.velocity);
             _prevPos = controller.rigidbody2d.position;
+        }
+    }
+
+    class Paddle : State
+    {
+        public Paddle(Controller controller) : base(controller) {}
+
+        public override void DoStateBehaviour()
+        {
+            controller.spriteRenderer.color = Color.green;
+        }
+
+        public override void DoStateBehaviourFixedUpdate()
+        {
+            Manager.RaftManager.Instance.MoveRaft(new Vector2(PlayerInput.Horizontal, PlayerInput.Vertical));
+        }
+
+        public override void Transitions()
+        {
+            if (PlayerInput.InteractHold) return;
+            if      (Idle()) {}
+            else if (Move()) {}
         }
     }
 }

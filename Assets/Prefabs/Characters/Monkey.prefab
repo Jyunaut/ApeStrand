@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 4327670495754306665}
   - component: {fileID: 4327670495754306664}
   - component: {fileID: 4327670495754306660}
+  - component: {fileID: 4106036620082834275}
   - component: {fileID: 4327670495754306671}
   - component: {fileID: 2181613286711409336}
   m_Layer: 0
@@ -156,6 +157,22 @@ CircleCollider2D:
   m_Offset: {x: 0, y: -0.85}
   serializedVersion: 2
   m_Radius: 0.1
+--- !u!58 &4106036620082834275
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4327670495754306668}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: -0.85}
+  serializedVersion: 2
+  m_Radius: 0.2
 --- !u!114 &4327670495754306671
 MonoBehaviour:
   m_ObjectHideFlags: 0
