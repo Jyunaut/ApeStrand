@@ -32,11 +32,21 @@ namespace Player
             return false;
         }
 
-        public bool Paddle()
+        public bool PaddleMode()
         {
             if (PlayerInput.InteractHold && controller.CanPaddle)
             {
-                controller.SetState(new Paddle(controller)); return true;
+                controller.SetState(new PaddleMode(controller)); return true;
+            }
+            return false;
+        }
+
+        public bool Paddling()
+        {
+            if (Mathf.Abs(Player.PlayerInput.Horizontal) > 0
+                || Mathf.Abs(Player.PlayerInput.Vertical) > 0)
+            {
+                controller.SetState(new Paddling(controller)); return true;
             }
             return false;
         }
@@ -54,7 +64,7 @@ namespace Player
         public override void Transitions()
         {
             if      (Move()) {}
-            else if (Paddle()) {}
+            else if (PaddleMode()) {}
         }
     }
 
@@ -74,12 +84,13 @@ namespace Player
         public override void Transitions()
         {
             if      (Idle()) {}
-            else if (Paddle()) {}
+            else if (PaddleMode()) {}
         }
 
         private void MovePlayer()
         {
-            if (Mathf.Abs(PlayerInput.Horizontal) > 0 || Mathf.Abs(PlayerInput.Vertical) > 0)
+            if (Mathf.Abs(PlayerInput.Horizontal) > 0
+                || Mathf.Abs(PlayerInput.Vertical) > 0)
                 controller.Direction = new Vector2(PlayerInput.Horizontal, PlayerInput.Vertical).normalized;
             controller.Velocity = controller.Rigidbody2d.position + controller.Direction * controller.Speed * Time.fixedDeltaTime;
             controller.Rigidbody2d.MovePosition(controller.Velocity);
@@ -87,25 +98,62 @@ namespace Player
         }
     }
 
-    class Paddle : State
+    class PaddleMode : State
     {
-        public Paddle(Controller controller) : base(controller) {}
+        public PaddleMode(Controller controller) : base(controller) {}
 
         public override void DoStateBehaviour()
         {
             controller.SpriteRenderer.color = Color.green;
         }
 
+        public override void Transitions()
+        {
+            if (Paddling()) {}
+            if (PlayerInput.InteractHold) return;
+            if      (Idle()) {}
+            else if (Move()) {}
+        }
+    }
+
+    class Paddling : PaddleMode
+    {
+        private Vector2 _direction;
+        private bool inMiddleOfPaddle;
+        private float paddleDelay = 0.25f;
+
+        public Paddling(Controller controller) : base(controller) {}
+
+        public override void ExitState()
+        {
+            Manager.RaftManager.Instance.paddleTime = 0f;
+        }
+
+        public override void DoStateBehaviour()
+        {
+            controller.SpriteRenderer.color = Color.blue;
+        }
+
         public override void DoStateBehaviourFixedUpdate()
         {
-            Manager.RaftManager.Instance.MoveRaft(new Vector2(PlayerInput.Horizontal, PlayerInput.Vertical));
+            if (Input.GetButton("Horizontal") || Input.GetButton("Vertical"))
+                _direction = new Vector2(PlayerInput.Horizontal, PlayerInput.Vertical).normalized;
+            
+            // Keep paddling if already in mid paddle even if inputs are released
+            if (Manager.RaftManager.Instance.paddleTime > paddleDelay)
+                inMiddleOfPaddle = true;
+            else
+                inMiddleOfPaddle = false;
+            Manager.RaftManager.Instance.MoveRaft(_direction);
         }
 
         public override void Transitions()
         {
-            if (PlayerInput.InteractHold) return;
-            if      (Idle()) {}
-            else if (Move()) {}
+            if ((Player.PlayerInput.Horizontal == 0
+                && Player.PlayerInput.Vertical == 0
+                || !Player.PlayerInput.InteractHold)
+                && !inMiddleOfPaddle)
+                controller.SetState(new PaddleMode(controller));
         }
     }
 }
