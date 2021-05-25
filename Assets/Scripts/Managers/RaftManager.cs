@@ -20,12 +20,6 @@ namespace Manager
             Instance = this;
         }
 
-        public void MoveRaft(Vector2 direction, float speed = 2f)
-        {
-            foreach (GameObject e in _raftObjects)
-                e.transform.Translate(speed * direction.normalized * Time.fixedDeltaTime);
-        }
-
         public void AddRaftObject(GameObject obj)
         {
             _raftObjects.Add(obj);
@@ -34,6 +28,23 @@ namespace Manager
         public void RemoveRaftObject(GameObject obj)
         {
             _raftObjects.Remove(obj);
+        }
+
+        [Range(0.05f,0.25f)] public float paddleDistance = 0.1f;
+        [Range(3f,6f)] public float paddleSpeed = 5f;
+        public float paddleTime = 0f;
+        public void MoveRaft(Vector2 dir)
+        {
+            // Paddle distance over time based on sine wave
+            Vector2 e1 = paddleDistance * Mathf.Sin(paddleSpeed * paddleTime) * dir;
+            if (Mathf.Sin(paddleSpeed * paddleTime) < 0)
+            {
+                paddleTime = 0f;
+                return;
+            }
+            paddleTime += Time.fixedDeltaTime;
+            foreach (GameObject e in _raftObjects)
+                e.transform.Translate(e1);
         }
     }
 }

@@ -9,6 +9,7 @@ namespace Player
     {
         [SerializeField] private bool debug_canInteract;
         [SerializeField] private bool debug_canPaddle;
+        [SerializeField] private string debug_state;
 
         [SerializeField, Range(0, 10)]
         private float _speed = 5f;
@@ -55,7 +56,6 @@ namespace Player
             {
                 if (!(col is EdgeCollider2D)) return;
                 CanPaddle = true;
-                print(CanPaddle);
             }
             else
             {
@@ -69,7 +69,6 @@ namespace Player
             {
                 if (!(col is EdgeCollider2D)) return;
                 CanPaddle = false;
-                print(CanPaddle);
             }
             else
             {
@@ -88,6 +87,7 @@ namespace Player
             _stateMachine.Transitions();
             debug_canInteract = CanInteract;
             debug_canPaddle = CanPaddle;
+            debug_state = _stateMachine.GetType().Name;
         }
     }
 }

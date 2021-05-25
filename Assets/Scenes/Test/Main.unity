@@ -1278,6 +1278,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _raftObjects: []
+  v: {x: 0, y: 0}
+  d: {x: 0, y: 0}
 --- !u!4 &1227927578
 Transform:
   m_ObjectHideFlags: 0
@@ -1286,7 +1288,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1227927576}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -630.1868}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 67636672}
@@ -1538,7 +1540,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 0fda9e7a10ca15e4fa18b8e9b68df4bc, type: 3}
 --- !u!224 &1488185696 stripped
 RectTransform:
@@ -1718,6 +1721,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f297870c0652afd4d9a0a9aaddfaa29e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1667735460 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4327670495754306668, guid: 694ebe92ac685f1469d1bda9ec532cfa, type: 3}
+  m_PrefabInstance: {fileID: 4327670495860661420}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1667735470
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1667735460}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9cf18fd074d4c54c82613ba4f331d63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debug_currentHunger: 0
 --- !u!1001 &1680035116
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1875,7 +1896,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1683395945}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -630.1868}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 67636672}
