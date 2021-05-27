@@ -1,30 +1,43 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Grid : MonoBehaviour
+public class Grid<TGridObject>
 {
     private int _width;
     private int _height;
     private float _cellSize;
     private Vector3 _originPosition;
-    private int[,] _gridArray;
-    // private TextMesh[,] _debugTextArray;
+    private TGridObject[,] _gridArray;
+    private TextMesh[,] _debugTextArray;
 
-    public Grid(int width, int height, float cellSize, Vector3 originPosition)
+    public Grid(int width, int height, float cellSize, Vector3 originPosition, Func<TGridObject> createGridObject)
     {
         _width = width;
         _height = height;
         _cellSize = cellSize;
         _originPosition = originPosition;
 
-        _gridArray = new int[_width, _height];
-        // _debugTextArray = new TextMesh[_width, _height];
+        _gridArray = new TGridObject[_width, _height];
+
+        // Initialize grid objects
+        for (int x = 0; x < _gridArray.GetLength(0); x++)
+        {
+            for (int y = 0; y < _gridArray.GetLength(1); y++)
+            { 
+                _gridArray[x, y] = createGridObject();
+            }
+        }
+
+        // Debug grid values into world
+        _debugTextArray = new TextMesh[_width, _height]; //
 
         for (int x = 0; x < _gridArray.GetLength(0); x++)
         {
             for (int y = 0; y < _gridArray.GetLength(1); y++)
             {
+                _debugTextArray[x, y] = Utils.CreateWorldText(_gridArray[x, y].ToString(), GetWorldPosition(x, y) + new Vector3(_cellSize, _cellSize) * .5f, 20, TextAnchor.UpperLeft); //
                 Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x, y + 1), Color.white, 100f);
                 Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x + 1, y), Color.white, 100f);
             }
@@ -44,23 +57,24 @@ public class Grid : MonoBehaviour
         y = Mathf.FloorToInt((worldPosition - _originPosition).y / _cellSize);
     }
 
-    //Setting the value of each grid node
-    public void SetValue(int x, int y, int value)
+    public void SetValue(int x, int y, TGridObject value)
     {
         if (x >= 0 && y >= 0 && x < _width && y < _height)
         {
             _gridArray[x, y] = value;
+            // Debug set/updated value
+            _debugTextArray[x, y].text = _gridArray[x, y].ToString();
         }
     }
 
-    public void SetValue(Vector3 worldPosition, int value)
+    public void SetValue(Vector3 worldPosition, TGridObject value)
     {
         int x, y;
         GetXY(worldPosition, out x, out y);
         SetValue(x, y, value);
     }
 
-    public int GetValue(int x, int y)
+    public TGridObject GetValue(int x, int y)
     {
         if (x >= 0 && y >= 0 && x < _width && y < _height)
         {
@@ -68,12 +82,12 @@ public class Grid : MonoBehaviour
         }
         else
         {
-            print("Invalid Value");
-            return 0;
+            Debug.Log("Invalid Value");
+            return default(TGridObject);
         }
     }
 
-    public int GetValue(Vector3 worldPosition)
+    public TGridObject GetValue(Vector3 worldPosition)
     {
         int x, y;
         GetXY(worldPosition, out x, out y);
