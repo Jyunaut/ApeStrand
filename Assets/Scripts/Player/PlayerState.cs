@@ -136,7 +136,8 @@ namespace Player
 
         public override void DoStateBehaviourFixedUpdate()
         {
-            if (Input.GetButton("Horizontal") || Input.GetButton("Vertical"))
+            if ((Input.GetButton("Horizontal") || Input.GetButton("Vertical"))
+                && !inMiddleOfPaddle)
                 _direction = new Vector2(PlayerInput.Horizontal, PlayerInput.Vertical).normalized;
             
             // Keep paddling if already in mid paddle even if inputs are released
