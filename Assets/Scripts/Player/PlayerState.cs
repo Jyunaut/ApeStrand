@@ -120,13 +120,30 @@ namespace Player
     {
         private Vector2 _direction;
         private bool inMiddleOfPaddle;
-        private float paddleDelay = 0.25f;
+        private float _paddleDistance = 0.1f;
+        private float _paddleSpeed = 5f;
+        private float _paddleDelay = 0.25f;
+        private float _paddleTimer = 0f;
 
         public Paddling(Controller controller) : base(controller) {}
 
+        public void MoveRaft(Vector2 dir)
+        {
+            // Paddle distance over time based on sine wave
+            Vector2 e1 = _paddleDistance * Mathf.Sin(_paddleSpeed * _paddleTimer) * dir;
+            if (Mathf.Sin(_paddleSpeed * _paddleTimer) < 0)
+            {
+                _paddleTimer = 0f;
+                return;
+            }
+            _paddleTimer += Time.fixedDeltaTime;
+            foreach (GameObject e in Manager.RaftManager.Instance.RaftObjects)
+                e.transform.Translate(e1);
+        }
+
         public override void ExitState()
         {
-            Manager.RaftManager.Instance.paddleTime = 0f;
+            _paddleTimer = 0f;
         }
 
         public override void DoStateBehaviour()
@@ -136,15 +153,16 @@ namespace Player
 
         public override void DoStateBehaviourFixedUpdate()
         {
-            if (Input.GetButton("Horizontal") || Input.GetButton("Vertical"))
+            if ((Input.GetButton("Horizontal") || Input.GetButton("Vertical"))
+                && !inMiddleOfPaddle)
                 _direction = new Vector2(PlayerInput.Horizontal, PlayerInput.Vertical).normalized;
             
             // Keep paddling if already in mid paddle even if inputs are released
-            if (Manager.RaftManager.Instance.paddleTime > paddleDelay)
+            if (_paddleTimer > _paddleDelay)
                 inMiddleOfPaddle = true;
             else
                 inMiddleOfPaddle = false;
-            Manager.RaftManager.Instance.MoveRaft(_direction);
+            MoveRaft(_direction);
         }
 
         public override void Transitions()
