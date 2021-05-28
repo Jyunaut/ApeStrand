@@ -24,6 +24,13 @@ namespace Manager
             Instance = this;
         }
 
+        void Start()
+        {
+            _gameUI?.SetActive(false);
+            _titleMenuUI?.SetActive(true);
+            _pauseMenuUI?.SetActive(false);
+        }
+
         public void StartGame()
         {
             GameManager.SetGameState(GameManager.State.Game);
