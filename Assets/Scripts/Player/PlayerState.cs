@@ -120,7 +120,8 @@ namespace Player
     {
         private Vector2 _direction;
         private bool inMiddleOfPaddle;
-        private float _paddleDistance = 0.1f;
+        private const float _defaultPaddleDistance = 0.1f;
+        private float _paddleDistance = _defaultPaddleDistance;
         private float _paddleSpeed = 5f;
         private float _paddleDelay = 0.1f;
         private float _paddleTimer = 0f;
@@ -129,6 +130,19 @@ namespace Player
 
         public void MoveRaft(Vector2 dir)
         {
+            // Slow raft based on the size of the raft
+            int numPlatforms = 0;
+            foreach (GameObject obj in Manager.RaftManager.Instance.RaftObjects)
+                if (obj.CompareTag("Platform")) numPlatforms++;
+
+            if (numPlatforms > 9)
+            {
+                _paddleDistance = _defaultPaddleDistance - 0.01f * (numPlatforms - 9);
+                if (_paddleDistance < 0) _paddleDistance = 0;
+            }
+            else
+                _paddleDistance = _defaultPaddleDistance;
+
             // Paddle distance over time based on sine wave
             Vector2 e1 = _paddleDistance * Mathf.Sin(_paddleSpeed * _paddleTimer) * dir;
             if (Mathf.Sin(_paddleSpeed * _paddleTimer) < 0)

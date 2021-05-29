@@ -17,7 +17,6 @@ namespace Player
         public float Speed { get => _speed * _speedMultiplier; }
         public void SetSpeedMultiplier(float multiplier) => _speedMultiplier = Mathf.Clamp(multiplier, 0.1f, 4f);
         public bool CanMove { get; set; } = true;
-        public bool CanInteract { get; private set; } = false;
         public bool CanPaddle { get; private set; } = false;
 
         public Animator Animator             { get; private set; }
@@ -49,17 +48,12 @@ namespace Player
             _stateMachine.EnterState();
         }
 
-
         void OnTriggerStay2D(Collider2D col)
         {
             if (col.gameObject.layer == LayerMask.NameToLayer("Platform"))
             {
                 if (!(col is EdgeCollider2D)) return;
                 CanPaddle = true;
-            }
-            else
-            {
-                CanInteract = true;
             }
         }
 
@@ -69,10 +63,6 @@ namespace Player
             {
                 if (!(col is EdgeCollider2D)) return;
                 CanPaddle = false;
-            }
-            else
-            {
-                CanInteract = false;
             }
         }
 
@@ -85,7 +75,6 @@ namespace Player
         {
             _stateMachine.DoStateBehaviour();
             _stateMachine.Transitions();
-            debug_canInteract = CanInteract;
             debug_canPaddle = CanPaddle;
             debug_state = _stateMachine.GetType().Name;
         }
