@@ -1,12 +1,21 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Manager;
 
 public class Hunger : MonoBehaviour
 {
-    [field: SerializeField] public float MaxHunger { get; private set; }
+    [SerializeField] private float _maxHunger;
     [field: SerializeField] public float CurrentHunger { get; private set; }
+    [SerializeField, Range(0, 1)] private float _hungerDecaySpeed;
+    public float MaxHunger
+    { 
+        get => _maxHunger;
+        set
+        {
+            _maxHunger = value;
+            CurrentHunger = Mathf.Clamp(CurrentHunger, 0, _maxHunger);
+        }
+    }
+    void OnValidate() => CurrentHunger = Mathf.Clamp(CurrentHunger, 0, _maxHunger);
 
     public void DecreaseHunger(float amount)
     {
@@ -42,6 +51,6 @@ public class Hunger : MonoBehaviour
         if (CurrentHunger <= 0 && GameManager.GameState != GameManager.State.Lose)
             GameManager.SetGameState(GameManager.State.Lose);
         else if (GameManager.GameState == GameManager.State.Game)
-            DecreaseHunger(Time.deltaTime / 2);
+            DecreaseHunger(Time.deltaTime * _hungerDecaySpeed);
     }
 }
