@@ -122,7 +122,7 @@ namespace Player
         private bool inMiddleOfPaddle;
         private float _paddleDistance = 0.1f;
         private float _paddleSpeed = 5f;
-        private float _paddleDelay = 0.25f;
+        private float _paddleDelay = 0.1f;
         private float _paddleTimer = 0f;
 
         public Paddling(Controller controller) : base(controller) {}
