@@ -138,7 +138,7 @@ namespace Player
             }
             _paddleTimer += Time.fixedDeltaTime;
             foreach (GameObject e in Manager.RaftManager.Instance.RaftObjects)
-                e.transform.Translate(e1);
+                e.transform.Translate(e1, Space.World);
         }
 
         public override void ExitState()
