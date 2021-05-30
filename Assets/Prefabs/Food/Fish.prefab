@@ -149,7 +149,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <HungerRestored>k__BackingField: 15
-  <UseDuration>k__BackingField: 0.25
+  <UseDuration>k__BackingField: 0.5
 --- !u!114 &6660113258131554635
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -145,10 +145,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1490938751262692271}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 264cb6569410a634aa1bc1b652155997, type: 3}
+  m_Script: {fileID: 11500000, guid: 3010ca9729f426541a9242c2bddb79f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   <FoodItem>k__BackingField: {fileID: 5192593168971954205, guid: c3714dbb1d8b3fb4f836538e0a9ddf43, type: 3}
+  <UseDuration>k__BackingField: 0.25
 --- !u!114 &902670102
 MonoBehaviour:
   m_ObjectHideFlags: 0

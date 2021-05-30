@@ -33,7 +33,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4327670495754306668}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.03, y: 1.69, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -186,10 +186,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ce556bd26434bd43b9f9c7bc4e79efb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debug_canInteract: 0
-  debug_canPaddle: 0
   debug_state: 
+  <SelectedItem>k__BackingField: {fileID: 0}
+  <HeldItem>k__BackingField: {fileID: 0}
   _speed: 5
+  controlsEnabled: 1
+  canMove: 1
+  nearRaftEdge: 0
+  usingItem: 0
+  useDuration: 0
 --- !u!114 &2181613286711409336
 MonoBehaviour:
   m_ObjectHideFlags: 0

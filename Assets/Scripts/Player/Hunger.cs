@@ -55,11 +55,6 @@ namespace Player
             CurrentHunger = MaxHunger;
         }
 
-        public GameObject SpawnFood()
-        {
-            return Instantiate(_controller.SelectedItem.GetComponent<FoodSource>().FoodItem, transform.position, Quaternion.identity);
-        }
-
         void Update()
         {
             if (CurrentHunger <= 0 && GameManager.GameState != GameManager.State.Lose)

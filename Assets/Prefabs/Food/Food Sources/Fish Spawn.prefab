@@ -100,7 +100,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 1.25
+  m_Radius: 0.7
 --- !u!114 &3742343114431943137
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -110,7 +110,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 3232819570418277661}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 264cb6569410a634aa1bc1b652155997, type: 3}
+  m_Script: {fileID: 11500000, guid: 5e98be64ded4e6643922317d2b36ccc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   <FoodItem>k__BackingField: {fileID: 4874407906158949375, guid: 91efb6a900f03bb4bae9a30d3c8f1699, type: 3}
+  <UseDuration>k__BackingField: 0.5
