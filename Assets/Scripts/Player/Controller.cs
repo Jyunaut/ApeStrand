@@ -8,18 +8,19 @@ namespace Player
     public class Controller : RaftObject
     {
         [SerializeField] private string debug_state;
+        [field: SerializeField] public GameObject SelectedItem { get; set; }
+        [field: SerializeField] public GameObject HeldItem { get; set; }
 
-        [SerializeField, Range(0, 10)]
-        private float _speed = 5f;
+        [SerializeField, Range(0, 10)] private float _speed = 5f;
         private float _speedMultiplier = 1f;
         public float Speed { get => _speed * _speedMultiplier; }
         public void SetSpeedMultiplier(float multiplier) => _speedMultiplier = Mathf.Clamp(multiplier, 0.1f, 4f);
-        public bool CanMove { get; set; } = true;
-        public bool CanPaddle { get; private set; }
-        public bool UsingItem { get; set; }
-        public float UseDuration { get; set; }
-        [field: SerializeField] public GameObject SelectedItem { get; set; }
-        [field: SerializeField] public GameObject HeldItem { get; set; }
+
+        public bool controlsEnabled = true;
+        public bool canMove = true;
+        public bool nearRaftEdge;
+        public bool usingItem;
+        public float useDuration;
 
         public Animator Animator             { get; private set; }
         public Rigidbody2D Rigidbody2d       { get; private set; }
@@ -62,7 +63,7 @@ namespace Player
                     break;
                 case Tag.Platform:
                     if (!(col is EdgeCollider2D)) return;
-                    CanPaddle = true;
+                    nearRaftEdge = true;
                     break;
                 default:
                     return;
@@ -79,7 +80,7 @@ namespace Player
                     break;
                 case Tag.Platform:
                     if (!(col is EdgeCollider2D)) return;
-                    CanPaddle = false;
+                    nearRaftEdge = false;
                     break;
                 default:
                     return;
@@ -101,8 +102,8 @@ namespace Player
 
         void UseItem()
         {
-            HeldItem.GetComponent<IInteractable>().Interact(gameObject);
-            UsingItem = true;
+            HeldItem.GetComponent<IInteractable>().Interact(gameObject, PlayerInput.Interact_B);
+            usingItem = true;
         }
 
         void FixedUpdate()
@@ -119,29 +120,17 @@ namespace Player
             if (HeldItem != null)
             {
                 GrabItem(HeldItem);
-                if (PlayerInput.Interact_A)
+                if (Input.GetButtonDown(PlayerInput.Interact_A))
                     DropItem();
-                else if (PlayerInput.Interact_B)
+                if (Input.GetButtonDown(PlayerInput.Interact_B))
                     UseItem();
             }
             else if (SelectedItem != null)
             {
-                switch (SelectedItem.tag)
-                {
-                    case Tag.FoodSource:
-                        if (PlayerInput.Interact_A)
-                        {
-                            GameObject food = Hunger.SpawnFood();
-                            GrabItem(food);
-                        }
-                        break;
-                    case Tag.Food:
-                        if (PlayerInput.Interact_A)
-                        {
-                            GrabItem(SelectedItem);
-                        }
-                        break;
-                }
+                if (Input.GetButtonDown(PlayerInput.Interact_A))
+                    SelectedItem.GetComponent<IInteractable>()?.Interact(gameObject, PlayerInput.Interact_A);
+                if (Input.GetButtonDown(PlayerInput.Interact_B))
+                    SelectedItem.GetComponent<IInteractable>()?.Interact(gameObject, PlayerInput.Interact_B);
             }
         }
     }

@@ -4,3 +4,8 @@ public struct Tag
     public const string FoodSource = "Food Source";
     public const string Food = "Food";
 }
+
+public enum Conditions
+{
+    NearRaftEdge
+}

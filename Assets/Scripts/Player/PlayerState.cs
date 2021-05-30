@@ -25,7 +25,7 @@ namespace Player
         {
             if ((PlayerInput.Horizontal != 0
                 || PlayerInput.Vertical != 0)
-                && controller.CanMove)
+                && controller.canMove)
             {
                 controller.SetState(new Move(controller)); return true;
             }
@@ -34,7 +34,7 @@ namespace Player
 
         public bool PaddleMode()
         {
-            if (PlayerInput.InteractHold_B && controller.CanPaddle)
+            if (Input.GetButton(PlayerInput.Interact_B) && controller.nearRaftEdge)
             {
                 controller.SetState(new PaddleMode(controller)); return true;
             }
@@ -43,8 +43,8 @@ namespace Player
 
         public bool Paddling()
         {
-            if (Mathf.Abs(Player.PlayerInput.Horizontal) > 0
-                || Mathf.Abs(Player.PlayerInput.Vertical) > 0)
+            if (Mathf.Abs(PlayerInput.Horizontal) > 0
+                || Mathf.Abs(PlayerInput.Vertical) > 0)
             {
                 controller.SetState(new Paddling(controller)); return true;
             }
@@ -53,7 +53,7 @@ namespace Player
 
         public bool UsingItem()
         {
-            if (controller.UsingItem)
+            if (controller.usingItem)
             {
                 controller.SetState(new UsingItem(controller)); return true;
             }
@@ -122,7 +122,7 @@ namespace Player
         public override void Transitions()
         {
             if (Paddling()) {}
-            if (PlayerInput.InteractHold_B) return;
+            if (Input.GetButton(PlayerInput.Interact_B)) return;
             if      (Idle()) {}
             else if (Move()) {}
         }
@@ -193,9 +193,9 @@ namespace Player
 
         public override void Transitions()
         {
-            if ((Player.PlayerInput.Horizontal == 0
-                && Player.PlayerInput.Vertical == 0
-                || !Player.PlayerInput.InteractHold_B)
+            if ((PlayerInput.Horizontal == 0
+                && PlayerInput.Vertical == 0
+                || !Input.GetButton(PlayerInput.Interact_B))
                 && !inMiddleOfPaddle)
                 controller.SetState(new PaddleMode(controller));
         }
@@ -213,18 +213,18 @@ namespace Player
         public override void DoStateBehaviour()
         {
             controller.SpriteRenderer.color = Color.cyan;
-            controller.UseDuration -= Time.deltaTime;
+            controller.useDuration -= Time.deltaTime;
         }
 
         public override void ExitState()
         {
-            controller.UsingItem = false;
-            controller.UseDuration = 0;
+            controller.usingItem = false;
+            controller.useDuration = 0;
         }
 
         public override void Transitions()
         {
-            if (controller.UseDuration >= 0) return;
+            if (controller.useDuration >= 0) return;
             if      (Idle()) {}
             else if (Move()) {}
         }

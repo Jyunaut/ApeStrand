@@ -91,7 +91,8 @@ public class Platform : RaftObject
 
     void OnTriggerStay2D(Collider2D col)
     {
-        if (_collider.bounds.Contains(col.transform.position)
+        Vector2 origin = (Vector2)col.transform.position + col.offset;
+        if (_collider.bounds.Contains(origin)
             && !_objectsOnRaft.Contains(col.gameObject)
             && col.gameObject.layer != LayerMask.NameToLayer("Ignore Platform"))
             _objectsOnRaft.Add(col.gameObject);
@@ -100,11 +101,14 @@ public class Platform : RaftObject
     void Update()
     {
         foreach (GameObject obj in _objectsOnRaft)
-            if (!_collider.bounds.Contains(obj.transform.position)
+        {
+            Vector2 origin = (Vector2)obj.transform.position + obj.GetComponent<Collider2D>().offset;
+            if (!_collider.bounds.Contains(origin)
                 || obj.layer == LayerMask.NameToLayer("Ignore Platform"))
             {
                 _objectsOnRaft.Remove(obj);
                 break;
             }
+        }
     }
 }
