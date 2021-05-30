@@ -2406,6 +2406,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1667735470, guid: 694ebe92ac685f1469d1bda9ec532cfa, type: 3}
+      propertyPath: _hungerDecaySpeed
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4327670495754306668, guid: 694ebe92ac685f1469d1bda9ec532cfa, type: 3}
       propertyPath: m_Name
       value: Monkey

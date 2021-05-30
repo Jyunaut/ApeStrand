@@ -19,7 +19,7 @@ namespace Manager
         public enum Flag { Paused }
 
         public static State GameState { get; private set; } = State.Menu;
-        public Dictionary<Flag, bool> GameFlags = new Dictionary<Flag, bool>();
+        public static Dictionary<Flag, bool> GameFlags = new Dictionary<Flag, bool>();
 
         void Awake()
         {
