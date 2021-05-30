@@ -17,9 +17,10 @@ GameObject:
   - component: {fileID: 4106036620082834275}
   - component: {fileID: 4327670495754306671}
   - component: {fileID: 2181613286711409336}
+  - component: {fileID: 1667735470}
   m_Layer: 0
   m_Name: Monkey
-  m_TagString: Raft Object
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -98,8 +99,8 @@ SortingGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4327670495754306668}
   m_Enabled: 1
-  m_SortingLayerID: -2059700741
-  m_SortingLayer: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
   m_SortingOrder: 0
 --- !u!95 &4327670495754306665
 Animator:
@@ -185,9 +186,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ce556bd26434bd43b9f9c7bc4e79efb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debug_canInteract: 0
+  debug_canPaddle: 0
+  debug_state: 
   _speed: 5
-  direction: {x: 0, y: 0}
-  velocity: {x: 0, y: 0}
 --- !u!114 &2181613286711409336
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -202,3 +204,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _platform: {fileID: 388307027116359500, guid: 0fda9e7a10ca15e4fa18b8e9b68df4bc, type: 3}
   _buildDistance: 1
+--- !u!114 &1667735470
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4327670495754306668}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9cf18fd074d4c54c82613ba4f331d63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _maxHunger: 50
+  <CurrentHunger>k__BackingField: 0
+  _hungerDecaySpeed: 0.5
