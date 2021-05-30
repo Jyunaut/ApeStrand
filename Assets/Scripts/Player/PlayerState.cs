@@ -34,7 +34,7 @@ namespace Player
 
         public bool PaddleMode()
         {
-            if (PlayerInput.InteractHold && controller.CanPaddle)
+            if (PlayerInput.InteractHold_B && controller.CanPaddle)
             {
                 controller.SetState(new PaddleMode(controller)); return true;
             }
@@ -47,6 +47,15 @@ namespace Player
                 || Mathf.Abs(Player.PlayerInput.Vertical) > 0)
             {
                 controller.SetState(new Paddling(controller)); return true;
+            }
+            return false;
+        }
+
+        public bool UsingItem()
+        {
+            if (controller.UsingItem)
+            {
+                controller.SetState(new UsingItem(controller)); return true;
             }
             return false;
         }
@@ -64,6 +73,8 @@ namespace Player
         public override void Transitions()
         {
             if      (Move()) {}
+            else if (UsingItem()) {}
+            else if (controller.HeldItem != null) return;
             else if (PaddleMode()) {}
         }
     }
@@ -81,20 +92,21 @@ namespace Player
             controller.SpriteRenderer.color = new UnityEngine.Color(127, 0, 0);
         }
 
-        public override void Transitions()
-        {
-            if      (Idle()) {}
-            else if (PaddleMode()) {}
-        }
-
         private void MovePlayer()
         {
-            if (Mathf.Abs(PlayerInput.Horizontal) > 0
-                || Mathf.Abs(PlayerInput.Vertical) > 0)
+            if (Mathf.Abs(PlayerInput.Horizontal) > 0 || Mathf.Abs(PlayerInput.Vertical) > 0)
                 controller.Direction = new Vector2(PlayerInput.Horizontal, PlayerInput.Vertical).normalized;
             controller.Velocity = controller.Rigidbody2d.position + controller.Direction * controller.Speed * Time.fixedDeltaTime;
             controller.Rigidbody2d.MovePosition(controller.Velocity);
             _prevPos = controller.Rigidbody2d.position;
+        }
+
+        public override void Transitions()
+        {
+            if      (Idle()) {}
+            else if (UsingItem()) {}
+            else if (controller.HeldItem != null) return;
+            else if (PaddleMode()) {}
         }
     }
 
@@ -110,7 +122,7 @@ namespace Player
         public override void Transitions()
         {
             if (Paddling()) {}
-            if (PlayerInput.InteractHold) return;
+            if (PlayerInput.InteractHold_B) return;
             if      (Idle()) {}
             else if (Move()) {}
         }
@@ -183,9 +195,38 @@ namespace Player
         {
             if ((Player.PlayerInput.Horizontal == 0
                 && Player.PlayerInput.Vertical == 0
-                || !Player.PlayerInput.InteractHold)
+                || !Player.PlayerInput.InteractHold_B)
                 && !inMiddleOfPaddle)
                 controller.SetState(new PaddleMode(controller));
+        }
+    }
+
+    class UsingItem : State
+    {
+        public UsingItem(Controller controller) : base(controller) {}
+
+        public override void EnterState()
+        {
+            // Play Animation
+        }
+
+        public override void DoStateBehaviour()
+        {
+            controller.SpriteRenderer.color = Color.cyan;
+            controller.UseDuration -= Time.deltaTime;
+        }
+
+        public override void ExitState()
+        {
+            controller.UsingItem = false;
+            controller.UseDuration = 0;
+        }
+
+        public override void Transitions()
+        {
+            if (controller.UseDuration >= 0) return;
+            if      (Idle()) {}
+            else if (Move()) {}
         }
     }
 }

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Platform : RaftObject, IDamageable
+public class Platform : RaftObject
 {
     [SerializeField]
     private EdgeCollider2D[] _walls = new EdgeCollider2D[4];
@@ -10,6 +10,15 @@ public class Platform : RaftObject, IDamageable
 
     [SerializeField]
     private List<GameObject> _adjacentPlatforms = new List<GameObject>();
+    [SerializeField]
+    private List<GameObject> _objectsOnRaft = new List<GameObject>();
+
+    private BoxCollider2D _collider;
+
+    void Awake()
+    {
+        _collider = GetComponent<BoxCollider2D>();
+    }
 
     protected override void Start()
     {
@@ -18,11 +27,6 @@ public class Platform : RaftObject, IDamageable
         UpdateColliders();
         foreach (GameObject platform in _adjacentPlatforms)
             platform.GetComponent<Platform>().UpdateColliders();
-    }
-
-    public void TakeDamage()
-    {
-        print(gameObject.name + " takes damage");
     }
 
     /* ============================================================================================ 
@@ -64,6 +68,11 @@ public class Platform : RaftObject, IDamageable
         }
     }
 
+    void OnMouseDown()
+    {
+        DestroyRaft();
+    }
+
     void DestroyRaft()
     {
         Destroy(gameObject);
@@ -73,8 +82,29 @@ public class Platform : RaftObject, IDamageable
             platform.GetComponent<Platform>().UpdateColliders();
     }
 
-    void OnMouseDown()
+    protected override void OnDestroy()
     {
-        DestroyRaft();
+        base.OnDestroy();
+        foreach (GameObject obj in _objectsOnRaft)
+            Destroy(obj);
+    }
+
+    void OnTriggerStay2D(Collider2D col)
+    {
+        if (_collider.bounds.Contains(col.transform.position)
+            && !_objectsOnRaft.Contains(col.gameObject)
+            && col.gameObject.layer != LayerMask.NameToLayer("Ignore Platform"))
+            _objectsOnRaft.Add(col.gameObject);
+    }
+
+    void Update()
+    {
+        foreach (GameObject obj in _objectsOnRaft)
+            if (!_collider.bounds.Contains(obj.transform.position)
+                || obj.layer == LayerMask.NameToLayer("Ignore Platform"))
+            {
+                _objectsOnRaft.Remove(obj);
+                break;
+            }
     }
 }

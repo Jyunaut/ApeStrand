@@ -1,56 +1,71 @@
 using UnityEngine;
 using Manager;
 
-public class Hunger : MonoBehaviour
+namespace Player
 {
-    [SerializeField] private float _maxHunger;
-    [field: SerializeField] public float CurrentHunger { get; private set; }
-    [SerializeField, Range(0, 1)] private float _hungerDecaySpeed;
-    public float MaxHunger
-    { 
-        get => _maxHunger;
-        set
-        {
-            _maxHunger = value;
-            CurrentHunger = Mathf.Clamp(CurrentHunger, 0, _maxHunger);
-        }
-    }
-    void OnValidate() => CurrentHunger = Mathf.Clamp(CurrentHunger, 0, _maxHunger);
-
-    public void DecreaseHunger(float amount)
+    public class Hunger : MonoBehaviour
     {
-        if (amount < 0)
-        {
-            Debug.LogWarning("Negative values are not allowed");
-            return;
+        [SerializeField] private float _maxHunger;
+        [field: SerializeField] public float CurrentHunger { get; private set; }
+        [SerializeField, Range(0, 2)] private float _hungerDecaySpeed;
+        public float MaxHunger
+        { 
+            get => _maxHunger;
+            set
+            {
+                _maxHunger = value;
+                CurrentHunger = Mathf.Clamp(CurrentHunger, 0, _maxHunger);
+            }
         }
-        CurrentHunger -= amount;
-        if (CurrentHunger < 0)
-            CurrentHunger = 0;
-    }
+        void OnValidate() => CurrentHunger = Mathf.Clamp(CurrentHunger, 0, _maxHunger);
 
-    public void IncreaseHunger(float amount)
-    {
-        if (amount < 0)
+        private Controller _controller;
+
+        public void DecreaseHunger(float amount)
         {
-            Debug.LogWarning("Negative values are not allowed");
-            return;
+            if (amount < 0)
+            {
+                Debug.LogWarning("Negative values are not allowed");
+                return;
+            }
+            CurrentHunger -= amount;
+            if (CurrentHunger < 0)
+                CurrentHunger = 0;
         }
-        CurrentHunger += amount;
-        if (CurrentHunger > MaxHunger)
+
+        public void IncreaseHunger(float amount)
+        {
+            if (amount < 0)
+            {
+                Debug.LogWarning("Negative values are not allowed");
+                return;
+            }
+            CurrentHunger += amount;
+            if (CurrentHunger > MaxHunger)
+                CurrentHunger = MaxHunger;
+        }
+
+        void Awake()
+        {
+            _controller = GetComponent<Controller>();
+        }
+
+        void Start()
+        {
             CurrentHunger = MaxHunger;
-    }
+        }
 
-    void Start()
-    {
-        CurrentHunger = MaxHunger;
-    }
+        public GameObject SpawnFood()
+        {
+            return Instantiate(_controller.SelectedItem.GetComponent<FoodSource>().FoodItem, transform.position, Quaternion.identity);
+        }
 
-    void Update()
-    {
-        if (CurrentHunger <= 0 && GameManager.GameState != GameManager.State.Lose)
-            GameManager.SetGameState(GameManager.State.Lose);
-        else if (GameManager.GameState == GameManager.State.Game)
-            DecreaseHunger(Time.deltaTime * _hungerDecaySpeed);
+        void Update()
+        {
+            if (CurrentHunger <= 0 && GameManager.GameState != GameManager.State.Lose)
+                GameManager.SetGameState(GameManager.State.Lose);
+            else if (GameManager.GameState == GameManager.State.Game)
+                DecreaseHunger(Time.deltaTime * _hungerDecaySpeed);
+        }
     }
 }
