@@ -20,9 +20,9 @@ public class DebugTool : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.J))
-            SceneLoader.LoadScene(SceneLoader.Scene.Title);
-        if (Input.GetKeyDown(KeyCode.K))
-            SceneLoader.LoadScene(SceneLoader.Scene.Main);
+        // if (Input.GetKeyDown(KeyCode.J))
+        //     SceneLoader.LoadScene(SceneLoader.Scene.Title);
+        // if (Input.GetKeyDown(KeyCode.K))
+        //     SceneLoader.LoadScene(SceneLoader.Scene.Main);
     }
 }

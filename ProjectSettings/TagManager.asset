@@ -4,7 +4,8 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Raft Object
+  - Food
+  - Food Source
   layers:
   - Default
   - TransparentFX
@@ -42,9 +43,9 @@ TagManager:
   - name: Background
     uniqueID: 1166765353
     locked: 0
+  - name: Raft
+    uniqueID: 603960131
+    locked: 0
   - name: Default
     uniqueID: 0
-    locked: 0
-  - name: Player
-    uniqueID: 2235266555
     locked: 0

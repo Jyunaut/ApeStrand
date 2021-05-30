@@ -27,7 +27,7 @@ namespace Player
             // Draw ray
             Vector2 origin = (Vector2)transform.position + _circleOrigin.offset;
             RaycastHit2D[] hits = Physics2D.RaycastAll(origin, _controller.Direction, _buildDistance, LayerMask.GetMask("Platform"));
-            Debug.DrawLine(origin, (Vector2)origin + _controller.Direction, Color.red);
+            //Debug.DrawLine(origin, (Vector2)origin + _controller.Direction, Color.red);
 
             const float xSpace = 2.5f;
             const float ySpace = 1.75f;
