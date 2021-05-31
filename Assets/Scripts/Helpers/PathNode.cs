@@ -9,9 +9,9 @@ public class PathNode
     private int _y;
     private bool _isWalkable;
 
-    public int gCost;
-    public int hCost;
-    public int fCost;
+    public int g;
+    public int h;
+    public int f;
 
     public PathNode prevNode;
     public List<PathNode> myNeighbors;
@@ -21,40 +21,41 @@ public class PathNode
         _grid = grid;
         _x = x;
         _y = y;
+        myNeighbors = new List<PathNode>();
     }
 
     public void CheckNeighbors()
     {
-        for (int x = _x - 1; x != _x + 1; x++)
+        for (int x = _x - 1; x != _x + 2; x++)
         {
-            for (int y = _y - 1; y != _y + 1; y++)
+            for (int y = _y - 1; y != _y + 2; y++)
             {
-                myNeighbors.Add(_grid?.GetGridObject(x, y));
-                Debug.Log(_grid?.GetGridObject(x, y));
+                if (_grid.GetGridObject(x,y) != _grid.GetGridObject(_x,_y))
+                {
+                    myNeighbors.Add(_grid?.GetGridObject(x, y));
+                    Debug.Log(_grid?.GetGridObject(x, y));
+                }
             }
         }
-    }
-
-    public int CalculateG()
-    {
-        int cost = 0;
-        return cost;
-    }
-
-    public int CalculateH()
-    {
-        int cost = 0;
-        return cost;
-
-    }
-
-    public int CalculateF()
-    {
-        return CalculateG() + CalculateH();
     }
 
     public override string ToString()
     {
         return _x + "," + _y;
+    }
+
+    public int CalculateG()
+    {
+        return 0;
+    }
+
+    public int CalculateH()
+    {
+        return 0;
+    }
+
+    public int CalculateF()
+    {
+        return CalculateG() + CalculateH();
     }
 }

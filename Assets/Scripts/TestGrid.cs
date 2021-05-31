@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class TestGrid : MonoBehaviour
 {
-    private Grid<objGrid> grid;
+    // private Grid<TestObj> grid;
+    private Pathfinding pathfinding;
     public Camera mainCamera;
 
     private void Start()
     {
-        grid = new Grid<objGrid>(3, 3, 10f, Vector3.zero, (Grid<objGrid> g, int x, int y) => new objGrid(g, x, y));
+        // grid = new Grid<TestObj>(3, 3, 10f, Vector3.zero, (Grid<TestObj> g, int x, int y) => new TestObj(g, x, y));
+        pathfinding = new Pathfinding(3,3);
     }
 
     private void Update()
@@ -19,39 +21,39 @@ public class TestGrid : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            objGrid i = grid.GetGridObject(mouseWorldPosition);
-            i.SetObj(Random.Range(0, 10));
-            grid.SetGridObject(mouseWorldPosition, i);
+            // TestObj i = grid.GetGridObject(mouseWorldPosition);
+            // i.SetObj(Random.Range(0, 10));
+            print(pathfinding.GetNode(mouseWorldPosition));
         }
-        if (Input.GetMouseButtonDown(1))
-        {
-            print(grid.GetGridObject(mouseWorldPosition));
-        }
+        // if (Input.GetMouseButtonDown(1))
+        // {
+        //     // print(grid.GetGridObject(mouseWorldPosition));
+        // }
     }
 }
 
-public class objGrid
-{
-    private int _x;
-    private int _y;
-    public int value;
-    private Grid<objGrid> _grid;
+// public class TestObj
+// {
+//     private int _x;
+//     private int _y;
+//     public int value;
+//     private Grid<TestObj> _grid;
 
-    public objGrid(Grid<objGrid> g, int x, int y) { _grid = g; _x = x; _y = y;}
+//     public TestObj(Grid<TestObj> g, int x, int y) { _grid = g; _x = x; _y = y;}
 
-    public void SetObj(int i)
-    {
-        value = i;
-        _grid.TriggeredGridObjectChanged(_x, _y);
-    }
+//     public void SetObj(int i)
+//     {
+//         value = i;
+//         _grid.TriggeredGridObjectChanged(_x, _y);
+//     }
 
-    public int GetObj()
-    {
-        return value;
-    }
+//     public int GetObj()
+//     {
+//         return value;
+//     }
 
-    public override string ToString()
-    {
-        return value.ToString();
-    }
-}
+//     public override string ToString()
+//     {
+//         return value.ToString();
+//     }
+// }
