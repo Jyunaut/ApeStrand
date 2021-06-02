@@ -12,16 +12,18 @@ public class Pathfinding
 
     public Pathfinding(int width, int height) {
         _grid = new Grid<PathNode>(width, height, 10f, Vector3.zero, (Grid<PathNode> g, int x, int y) => new PathNode(g,x,y));
-        openList = new List<PathNode>();
         closedList = new List<PathNode>();
+        openList = new List<PathNode>();
     }
 
     public void SetStartNode(PathNode node) {
         _start = node;
+        Debug.Log("Start Node: " + _start);
     }
 
     public void SetEndNode(PathNode node) {
         _end = node;
+        Debug.Log("End Node: " + _end);
     }
 
     public PathNode GetNode(Vector3 pos) {
@@ -37,7 +39,6 @@ public class Pathfinding
         SetEndNode(end);
 
         List<PathNode> path = new List<PathNode>();
-
         return path;
 
     }

@@ -14,48 +14,52 @@ public class PathNode
     public int f;
 
     public PathNode prevNode;
-    public List<PathNode> myNeighbors;
+    
 
     public PathNode(Grid<PathNode> grid, int x, int y)
     {
         _grid = grid;
         _x = x;
         _y = y;
-        myNeighbors = new List<PathNode>();
     }
 
-    public void CheckNeighbors()
+    public List<PathNode> SetOpenList()
     {
+        List<PathNode> openList = new List<PathNode>();
+        
         for (int x = _x - 1; x != _x + 2; x++)
         {
             for (int y = _y - 1; y != _y + 2; y++)
             {
-                if (_grid.GetGridObject(x,y) != _grid.GetGridObject(_x,_y))
-                {
-                    myNeighbors.Add(_grid?.GetGridObject(x, y));
-                    Debug.Log(_grid?.GetGridObject(x, y));
-                }
+                openList.Add(_grid?.GetGridObject(x, y));
+                Debug.Log(_grid?.GetGridObject(x, y));
             }
         }
+        return openList;
     }
 
+    public bool TestWalk(Vector3 pos) 
+    {
+        return false;
+    }
+
+    private int CalculateG()
+    {
+        return 0;
+    }
+
+    private int CalculateH()
+    {
+        return 0;
+    }
+
+    private int CalculateF()
+    {
+        return CalculateG() + CalculateH();
+    }
+    
     public override string ToString()
     {
         return _x + "," + _y;
-    }
-
-    public int CalculateG()
-    {
-        return 0;
-    }
-
-    public int CalculateH()
-    {
-        return 0;
-    }
-
-    public int CalculateF()
-    {
-        return CalculateG() + CalculateH();
     }
 }
