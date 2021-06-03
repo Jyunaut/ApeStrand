@@ -23,19 +23,24 @@ public class PathNode
         _y = y;
     }
 
-    public List<PathNode> SetOpenList()
+    public List<PathNode> GetNeighbors()
     {
-        List<PathNode> openList = new List<PathNode>();
+        List<PathNode> neighbors = new List<PathNode>();
         
         for (int x = _x - 1; x != _x + 2; x++)
         {
             for (int y = _y - 1; y != _y + 2; y++)
             {
-                openList.Add(_grid?.GetGridObject(x, y));
-                Debug.Log(_grid?.GetGridObject(x, y));
+                if(_grid.GetGridObject(x, y) != null)
+                    neighbors.Add(_grid.GetGridObject(x, y));
             }
         }
-        return openList;
+
+        foreach(PathNode c in neighbors) 
+        {
+            Debug.Log(c);
+        }
+        return neighbors;
     }
 
     public bool TestWalk(Vector3 pos) 

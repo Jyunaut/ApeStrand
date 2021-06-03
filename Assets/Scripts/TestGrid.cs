@@ -20,11 +20,15 @@ public class TestGrid : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             pathfinding.SetStartNode(pathfinding.GetNode(mouseWorldPosition));
-            print(pathfinding.GetNode(mouseWorldPosition));
+            // print(pathfinding.GetNode(mouseWorldPosition));
         }
         if (Input.GetMouseButtonDown(1))
         {
             pathfinding.SetEndNode(pathfinding.GetNode(mouseWorldPosition));
+        }
+        if (Input.GetKeyDown("space"))
+        {
+            pathfinding.FindPath();
         }
     }
 }
