@@ -17,16 +17,68 @@ public class Pathfinding
         openList = new List<PathNode>();
     }
 
+    // TODO: Merge set start+end so that scoring start node initializes properly
     public void SetStartNode(PathNode node)
     {
         _start = node;
-        // Debug.Log("Start Node: " + _start);
+        _start.ScoreNode(_start, _end);
+        closedList.Add(_start);
+        Debug.Log("Start Node: " + _start);
     }
 
     public void SetEndNode(PathNode node)
     {
         _end = node;
-        // Debug.Log("End Node: " + _end);
+        Debug.Log("End Node: " + _end);
+    }
+
+    public void DebugClosedList()
+    {
+        Debug.Log("===This is my path===");
+        for(int n = 0; n <= closedList.Count - 1; n++)
+        {
+            Debug.Log("Path #" + n + ": " + closedList[n]);
+        }
+    }
+
+    public void FindPath()
+    {
+        if(_start != null && _end != null)
+        {
+            ScoreList();
+            DebugClosedList(); // holy god
+        }
+    }
+
+    private void ScoreList()
+    {
+        // Score all adjacent nodes
+        PathNode parent = closedList[closedList.Count - 1];
+        List<PathNode> adjacentNodes = parent.GetAdjacent();
+        foreach (PathNode n in adjacentNodes)
+        {
+            // Score nodes that has not been added to a list
+            if(!openList.Contains(n) && !closedList.Contains(n))
+            {
+                n.ScoreNode(parent, _end);
+                openList.Add(n);
+            }
+        }
+
+        // Find lowest F score
+        PathNode lowestF = adjacentNodes[0];
+        for(int n = 1; n <= adjacentNodes.Count - 1; n++)
+        {
+            if(adjacentNodes[n].GetF() < lowestF.GetF())
+            {
+                lowestF = adjacentNodes[n];
+            }
+            if(n == adjacentNodes.Count - 1)
+            {
+                openList.Remove(lowestF);
+                closedList.Add(lowestF);
+            }
+        }
     }
 
     public PathNode GetNode(Vector3 pos)
@@ -37,21 +89,5 @@ public class Pathfinding
     public PathNode GetNode(int x, int y)
     {
         return _grid.GetGridObject(x, y);
-    }
-
-    public List<PathNode> FindPath(PathNode start, PathNode end)
-    {
-        SetStartNode(start);
-        SetEndNode(end);
-
-        List<PathNode> path = new List<PathNode>();
-
-        start.GetNeighbors();
-        return path;
-
-    }
-    public void FindPath()
-    {
-        FindPath(_start, _end);
     }
 }

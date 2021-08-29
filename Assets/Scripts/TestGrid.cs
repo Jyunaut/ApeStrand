@@ -6,10 +6,18 @@ public class TestGrid : MonoBehaviour
 {
     private Pathfinding pathfinding;
     public Camera mainCamera;
+    // private int[] myArr = {1,2,3,4,5};
+    // private List<int> myQueue = new List<int>();
 
     private void Start()
     {
         pathfinding = new Pathfinding(3,3);
+        // foreach (int x in myArr)
+        // {
+        //     myQueue.Add(x);
+        //     // Debug.Log(x);
+        // }
+        // Debug.Log(myQueue[myQueue.Count - 1]);
     }
 
     private void Update()
@@ -28,6 +36,7 @@ public class TestGrid : MonoBehaviour
         }
         if (Input.GetKeyDown("space"))
         {
+            // pathfinding.ScoreNodes();
             pathfinding.FindPath();
         }
     }
