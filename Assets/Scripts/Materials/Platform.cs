@@ -6,27 +6,57 @@ public class Platform : RaftObject
 {
     [SerializeField]
     private EdgeCollider2D[] _walls = new EdgeCollider2D[4];
-    public EdgeCollider2D[] GetWalls() => _walls;
 
-    [SerializeField]
-    private List<GameObject> _adjacentPlatforms = new List<GameObject>();
-    [SerializeField]
-    private List<GameObject> _objectsOnRaft = new List<GameObject>();
+    [SerializeField] private List<GameObject> _adjacentPlatforms = new List<GameObject>();
+    [SerializeField] private List<GameObject> _objectsOnRaft = new List<GameObject>();
 
     private BoxCollider2D _collider;
 
-    void Awake()
+    private void Awake()
     {
         _collider = GetComponent<BoxCollider2D>();
     }
 
-    protected override void Start()
+    private void Start()
     {
-        base.Start();
         // Update the colliders of this and adjacent platforms
         UpdateColliders();
         foreach (GameObject platform in _adjacentPlatforms)
             platform.GetComponent<Platform>().UpdateColliders();
+    }
+
+    protected override void OnDisable()
+    {
+        foreach (GameObject obj in _objectsOnRaft)
+            Destroy(obj);
+    }
+
+    private void Update()
+    {
+        foreach (GameObject obj in _objectsOnRaft)
+        {
+            Vector2 origin = (Vector2)obj.transform.position + obj.GetComponent<Collider2D>().offset;
+            if (!_collider.bounds.Contains(origin)
+                || obj.layer == LayerMask.NameToLayer(Layer.IgnorePlatform))
+            {
+                _objectsOnRaft.Remove(obj);
+                break;
+            }
+        }
+    }
+
+    private void OnTriggerStay2D(Collider2D col)
+    {
+        Vector2 origin = (Vector2)col.transform.position + col.offset;
+        if (_collider.bounds.Contains(origin)
+            && !_objectsOnRaft.Contains(col.gameObject)
+            && col.gameObject.layer != LayerMask.NameToLayer(Layer.IgnorePlatform))
+            _objectsOnRaft.Add(col.gameObject);
+    }
+
+    private void OnMouseDown()
+    {
+        DestroyRaft();
     }
 
     /* ============================================================================================ 
@@ -68,47 +98,12 @@ public class Platform : RaftObject
         }
     }
 
-    void OnMouseDown()
-    {
-        DestroyRaft();
-    }
-
-    void DestroyRaft()
+    private void DestroyRaft()
     {
         Destroy(gameObject);
 
         // Update the colliders of adjacent platforms
         foreach (GameObject platform in _adjacentPlatforms)
             platform.GetComponent<Platform>().UpdateColliders();
-    }
-
-    protected override void OnDestroy()
-    {
-        base.OnDestroy();
-        foreach (GameObject obj in _objectsOnRaft)
-            Destroy(obj);
-    }
-
-    void OnTriggerStay2D(Collider2D col)
-    {
-        Vector2 origin = (Vector2)col.transform.position + col.offset;
-        if (_collider.bounds.Contains(origin)
-            && !_objectsOnRaft.Contains(col.gameObject)
-            && col.gameObject.layer != LayerMask.NameToLayer("Ignore Platform"))
-            _objectsOnRaft.Add(col.gameObject);
-    }
-
-    void Update()
-    {
-        foreach (GameObject obj in _objectsOnRaft)
-        {
-            Vector2 origin = (Vector2)obj.transform.position + obj.GetComponent<Collider2D>().offset;
-            if (!_collider.bounds.Contains(origin)
-                || obj.layer == LayerMask.NameToLayer("Ignore Platform"))
-            {
-                _objectsOnRaft.Remove(obj);
-                break;
-            }
-        }
     }
 }

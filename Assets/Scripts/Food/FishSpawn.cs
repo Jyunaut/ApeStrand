@@ -4,21 +4,18 @@ using UnityEngine;
 
 public class FishSpawn : FoodSource, IInteractable
 {
-    public void Interact(GameObject user, string input)
+    public void Interact(GameObject user)
     {
-        if (!user.GetComponent<Player.Controller>().nearRaftEdge) return;
+        if (!user.GetComponent<Player.Controller>().NearRaftEdge) return;
         
-        switch (input)
+        if (Inputs.InteractAPress)
         {
-            case PlayerInput.Interact_A:
-                GameObject food = SpawnFood(user.transform.position);
-                user.GetComponent<Player.Controller>().GrabItem(food);
-                break;
-            case PlayerInput.Interact_B:
-                break;
-            default:
-                Debug.Log("No appropriate input");
-                return;
+            GameObject food = SpawnFood(user.transform.position);
+            user.GetComponent<Player.Controller>().GrabItem(food);
+        }
+        else if (Inputs.InteractBPress)
+        {
+
         }
     }
 }

@@ -7,6 +7,10 @@ namespace Player
     [RequireComponent(typeof(Rigidbody2D))]
     public class Controller : RaftObject
     {
+        public static bool ControlsEnabled { get; private set; } = true;
+        public static bool CanMove = true;
+        public static bool CanInteract = true;
+
         [SerializeField] private string debug_state;
         [field: SerializeField] public GameObject SelectedItem { get; set; }
         [field: SerializeField] public GameObject HeldItem { get; set; }
@@ -16,11 +20,7 @@ namespace Player
         public float Speed { get => _speed * _speedMultiplier; }
         public void SetSpeedMultiplier(float multiplier) => _speedMultiplier = Mathf.Clamp(multiplier, 0.1f, 4f);
 
-        public bool controlsEnabled = true;
-        public bool canMove = true;
-        public bool nearRaftEdge;
-        public bool usingItem;
-        public float useDuration;
+        public bool NearRaftEdge { get; private set; }
 
         public Animator Animator             { get; private set; }
         public Rigidbody2D Rigidbody2d       { get; private set; }
@@ -30,9 +30,9 @@ namespace Player
         public Vector2 Direction { get; set; }
         public Vector2 Velocity { get; set; }
         
-        private State _stateMachine;
+        public State State { get; private set; }
 
-        void Awake()
+        private void Awake()
         {
             Animator = GetComponent<Animator>();
             Rigidbody2d = GetComponent<Rigidbody2D>();
@@ -40,20 +40,55 @@ namespace Player
             Hunger = GetComponent<Hunger>();
         }
 
-        protected override void Start()
+        protected override void OnEnable()
         {
-            base.Start();
+            base.OnEnable();
+            Manager.GameManager.Instance.OnResume += EnableControls;
+            Manager.GameManager.Instance.OnPause += DisableControls;
+            Manager.GameManager.Instance.OnWin += DisableControls;
+            Manager.GameManager.Instance.OnLose += DisableControls;
+        }
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            Manager.GameManager.Instance.OnResume -= EnableControls;
+            Manager.GameManager.Instance.OnPause -= DisableControls;
+            Manager.GameManager.Instance.OnWin -= DisableControls;
+            Manager.GameManager.Instance.OnLose -= DisableControls;
+        }
+
+        private void Start()
+        {
             SetState(new Idle(this));
         }
 
-        public void SetState(State state)
+        private void FixedUpdate()
         {
-            _stateMachine?.ExitState();
-            _stateMachine = state;
-            _stateMachine.EnterState();
+            State.FixedUpdate();
         }
 
-        void OnTriggerStay2D(Collider2D col)
+        private void Update()
+        {
+            State.Update();
+            State.Transitions();
+            debug_state = State.GetType().Name;
+
+            if (HeldItem != null)
+            {
+                GrabItem(HeldItem);
+                if (Inputs.InteractAPress)
+                    DropItem();
+                else if (Inputs.InteractBPress)
+                    UseItem();
+            }
+            else if (SelectedItem != null)
+            {
+                if (Inputs.InteractAPress || Inputs.InteractBPress)
+                    SelectedItem.GetComponent<IInteractable>().Interact(gameObject);
+            }
+        }
+
+        private void OnTriggerStay2D(Collider2D col)
         {
             switch (col.gameObject.tag)
             {
@@ -63,14 +98,14 @@ namespace Player
                     break;
                 case Tag.Platform:
                     if (!(col is EdgeCollider2D)) return;
-                    nearRaftEdge = true;
+                    NearRaftEdge = true;
                     break;
                 default:
                     return;
             }
         }
 
-        void OnTriggerExit2D(Collider2D col)
+        private void OnTriggerExit2D(Collider2D col)
         {
             switch (col.gameObject.tag)
             {
@@ -80,58 +115,47 @@ namespace Player
                     break;
                 case Tag.Platform:
                     if (!(col is EdgeCollider2D)) return;
-                    nearRaftEdge = false;
+                    NearRaftEdge = false;
                     break;
                 default:
                     return;
             }
         }
 
+        public void SetState(State state)
+        {
+            State?.ExitState();
+            State = state;
+            State.EnterState();
+        }
+
         public void GrabItem(GameObject obj)
         {
             HeldItem = obj;
-            HeldItem.layer = LayerMask.NameToLayer("Ignore Platform");
+            HeldItem.layer = LayerMask.NameToLayer(Layer.IgnorePlatform);
             HeldItem.transform.position = transform.position;
         }
 
-        void DropItem()
+        private void DropItem()
         {
-            HeldItem.layer = LayerMask.NameToLayer("Default");
+            HeldItem.layer = LayerMask.NameToLayer(Layer.Default);
             HeldItem = null;
         }
 
-        void UseItem()
+        private void UseItem()
         {
-            HeldItem.GetComponent<IInteractable>().Interact(gameObject, PlayerInput.Interact_B);
-            usingItem = true;
+            SetState(new UsingItem(this, HeldItem.GetComponent<IInteractable>().UseDuration));
+            HeldItem.GetComponent<IInteractable>().Interact(gameObject);
         }
 
-        void FixedUpdate()
+        private void EnableControls()
         {
-            _stateMachine.DoStateBehaviourFixedUpdate();
+            ControlsEnabled = true;
         }
 
-        void Update()
+        private void DisableControls()
         {
-            _stateMachine.DoStateBehaviour();
-            _stateMachine.Transitions();
-            debug_state = _stateMachine.GetType().Name;
-
-            if (HeldItem != null)
-            {
-                GrabItem(HeldItem);
-                if (Input.GetButtonDown(PlayerInput.Interact_A))
-                    DropItem();
-                if (Input.GetButtonDown(PlayerInput.Interact_B))
-                    UseItem();
-            }
-            else if (SelectedItem != null)
-            {
-                if (Input.GetButtonDown(PlayerInput.Interact_A))
-                    SelectedItem.GetComponent<IInteractable>()?.Interact(gameObject, PlayerInput.Interact_A);
-                if (Input.GetButtonDown(PlayerInput.Interact_B))
-                    SelectedItem.GetComponent<IInteractable>()?.Interact(gameObject, PlayerInput.Interact_B);
-            }
+            ControlsEnabled = false;
         }
     }
 }

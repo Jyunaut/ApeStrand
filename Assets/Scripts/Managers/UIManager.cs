@@ -14,26 +14,36 @@ namespace Manager
         [SerializeField] private GameObject _pauseButton;
         [SerializeField] private float _previousTimeScale = 1f;
 
-        void Awake()
+        private void Awake()
         {
             if (Instance != null && Instance != this)
-            {
                 Destroy(gameObject);
-                return;
-            }
-            Instance = this;
+            else
+                Instance = this;
         }
 
-        void Start()
+        private void OnEnable()
+        {
+            GameManager.Instance.OnWin += ShowWinUI;
+            GameManager.Instance.OnLose += ShowLoseUI;
+        }
+
+        private void OnDisable()
+        {
+            GameManager.Instance.OnWin -= ShowWinUI;
+            GameManager.Instance.OnLose -= ShowLoseUI;
+        }
+
+        private void Start()
         {
             _gameUI?.SetActive(false);
             _titleMenuUI?.SetActive(true);
             _pauseMenuUI?.SetActive(false);
         }
 
-        public void StartGame()
+        public void PlayButton()
         {
-            GameManager.SetGameState(GameManager.State.Game);
+            GameManager.Instance.SetGameState(GameManager.State.Game);
             print("Game Started");
             
             _gameUI?.SetActive(true);
@@ -41,11 +51,11 @@ namespace Manager
             _pauseButton?.SetActive(true);
         }
 
-        public void Resume()
+        public void ResumeButton()
         {
-            if (GameManager.GameState == GameManager.State.Game)
+            if (GameManager.Instance.GameState == GameManager.State.Game)
                 return;
-            GameManager.SetGameState(GameManager.State.Game);
+            GameManager.Instance.SetGameState(GameManager.State.Game);
             Time.timeScale = _previousTimeScale;
             print("Resume Game");
 
@@ -54,17 +64,27 @@ namespace Manager
             _pauseButton?.SetActive(true);
         }
 
-        public void Pause()
+        public void PauseButton()
         {
-            if (GameManager.GameState == GameManager.State.Menu)
+            if (GameManager.Instance.GameState == GameManager.State.Menu)
                 return;
-            GameManager.SetGameState(GameManager.State.Menu);
+            GameManager.Instance.SetGameState(GameManager.State.Menu);
             _previousTimeScale = Time.timeScale;
             Time.timeScale = 0f;
             print("Pause Game");
             
             _pauseMenuUI?.SetActive(true);
             _pauseButton?.SetActive(false);
+        }
+
+        public void ShowWinUI()
+        {
+            Debug.Log("ayy you win");
+        }
+
+        public void ShowLoseUI()
+        {
+            Debug.Log("ayy you lose");
         }
     }
 }

@@ -9,84 +9,81 @@ namespace Manager
     {
         public static GameManager Instance { get; private set; }
 
-        public float IslandDistance { get; private set; }
-        [SerializeField] private float _startDistance = 250f;
-        [SerializeField] private float debug_islandDistance;
-        [SerializeField] private State debug_gameState;
+        public delegate void GameStateChange();
+        public event GameStateChange OnWin, OnLose, OnPause, OnResume;
 
-        [Serializable]
+        [field: SerializeField] public float IslandDistance { get; private set; }
+        [SerializeField] private float _distanceTravelled;
+        [SerializeField] private float _startDistance;
+        public float DistanceTravelled
+        {
+            get
+            {
+                return _distanceTravelled;
+            }
+            set
+            {
+                _distanceTravelled = value;
+                if (_distanceTravelled >= IslandDistance && GameState == State.Game)
+                    SetGameState(State.Win);
+            }
+        }
+
         public enum State { Game, Menu, Win, Lose }
-        public enum Flag { Paused }
 
-        public static State GameState { get; private set; } = State.Menu;
-        public static Dictionary<Flag, bool> GameFlags = new Dictionary<Flag, bool>();
+        [SerializeField] private State _gameState;
+        public State GameState
+        {
+            get
+            {
+                return _gameState;
+            }
+            set
+            {
+                State temp = _gameState;
+                _gameState = value;
+                switch (value)
+                {
+                    case State.Win when temp == State.Game:
+                        OnWin?.Invoke();
+                        break;
+                    case State.Lose when temp == State.Game:
+                        OnLose?.Invoke();
+                        break;
+                    case State.Menu:
+                        OnPause?.Invoke();
+                        break;
+                    case State.Game:
+                        OnResume?.Invoke();
+                        break;
+                }
+            }
+        }
 
-        void Awake()
+        private void Awake()
         {
             if (Instance != null && Instance != this)
-            {
                 Destroy(gameObject);
-                return;
-            }
-            Instance = this;
-            foreach (Flag flag in Enum.GetValues(typeof(Flag)))
-                GameFlags.Add(flag, false);
+            else
+                Instance = this;
         }
 
-        void Start()
+        private void Start()
         {
-            IslandDistance = _startDistance;
+            SetGameState(State.Menu);
+            DistanceTravelled = _startDistance;
         }
 
-        public static void SetGameState(State state)
+        public void SetGameState(State state)
         {
             GameState = state;
         }
 
-        void StateGame()
+        private void Update()
         {
-            IslandDistance -= Time.deltaTime;
-            debug_islandDistance = IslandDistance;
-
-            if (IslandDistance <= 0)
+            if (GameState == State.Game)
             {
-                print("Ayy you win!");
-                GameState = State.Win;
-            }
-        }
-
-        void StateMenu()
-        {
-
-        }
-
-        void StateWin()
-        {
-            print("We're winning!");
-        }
-
-        void StateLose()
-        {
-
-        }
-
-        void Update()
-        {
-            debug_gameState = GameState;
-            switch (GameState)
-            {
-                case State.Game:
-                    StateGame();
-                    break;
-                case State.Menu:
-                    StateMenu();
-                    break;
-                case State.Win:
-                    StateWin();
-                    break;
-                case State.Lose:
-                    StateLose();
-                    break;
+                DistanceTravelled += Time.deltaTime;
             }
         }
     }

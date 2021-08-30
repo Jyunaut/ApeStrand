@@ -1,14 +1,10 @@
 fileFormatVersion: 2
-<<<<<<< HEAD:Assets/Scripts/GameManager.cs.meta
 guid: af9fa65149099d04d9fd683dd388c9d9
-=======
-guid: 94ee3d8312570684ab0af831c47f2460
->>>>>>> f02004bd1dc1e00e6ef73182016303ba23195e29:Assets/Scripts/IDamageable.cs.meta
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
   defaultReferences: []
-  executionOrder: 0
+  executionOrder: -10
   icon: {instanceID: 0}
   userData: 
   assetBundleName: 
