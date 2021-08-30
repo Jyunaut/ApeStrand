@@ -999,7 +999,7 @@ PrefabInstance:
       objectReference: {fileID: 1635288111}
     - target: {fileID: 8362671000253034783, guid: 9a67aa01bd475ea4f9001503f46df396, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: Resume
+      value: ResumeButton
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9a67aa01bd475ea4f9001503f46df396, type: 3}
@@ -1330,7 +1330,7 @@ PrefabInstance:
       objectReference: {fileID: 1635288111}
     - target: {fileID: 6911899792250568579, guid: 38853d0b21d5662479a70cef59ee3a94, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: StartGame
+      value: PlayButton
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 38853d0b21d5662479a70cef59ee3a94, type: 3}
@@ -1501,7 +1501,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ae460a2972417647a10ac7f15213400, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RaftObjects: []
+  <RaftObjects>k__BackingField: []
 --- !u!4 &1227927578
 Transform:
   m_ObjectHideFlags: 0
@@ -2046,7 +2046,7 @@ PrefabInstance:
       objectReference: {fileID: 1635288111}
     - target: {fileID: 4664638096559218094, guid: f9457e3b852a7ea41a6135a3dd44379b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: Pause
+      value: PauseButton
       objectReference: {fileID: 0}
     - target: {fileID: 4664638096559218095, guid: f9457e3b852a7ea41a6135a3dd44379b, type: 3}
       propertyPath: m_Pivot.x
@@ -2175,9 +2175,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af9fa65149099d04d9fd683dd388c9d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _startDistance: 250
-  debug_islandDistance: 0
-  debug_gameState: 0
+  <IslandDistance>k__BackingField: 250
+  _distanceTravelled: 0
+  _startDistance: 0
+  _gameState: 0
 --- !u!4 &1683395947
 Transform:
   m_ObjectHideFlags: 0
@@ -2406,10 +2407,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1667735470, guid: 694ebe92ac685f1469d1bda9ec532cfa, type: 3}
-      propertyPath: _hungerDecaySpeed
-      value: 2
-      objectReference: {fileID: 0}
     - target: {fileID: 4327670495754306668, guid: 694ebe92ac685f1469d1bda9ec532cfa, type: 3}
       propertyPath: m_Name
       value: Monkey

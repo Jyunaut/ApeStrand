@@ -7,26 +7,24 @@ namespace Manager
     {
         public static RaftManager Instance { get; private set; }
 
-        public List<GameObject> RaftObjects = new List<GameObject>();
+        [field: SerializeField] public List<GameObject> RaftObjects { get; set; } = new List<GameObject>();
 
         void Awake()
         {
             if (Instance != null && Instance != this)
-            {
                 Destroy(gameObject);
-                return;
-            }
-            Instance = this;
+            else
+                Instance = this;
         }
 
-        public void AddRaftObject(GameObject obj)
+        public static void AddRaftObject(GameObject obj)
         {
-            RaftObjects.Add(obj);
+            Instance.RaftObjects.Add(obj);
         }
 
-        public void RemoveRaftObject(GameObject obj)
+        public static void RemoveRaftObject(GameObject obj)
         {
-            RaftObjects.Remove(obj);
+            Instance.RaftObjects.Remove(obj);
         }
     }
 }

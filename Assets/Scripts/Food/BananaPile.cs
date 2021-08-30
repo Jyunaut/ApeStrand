@@ -4,19 +4,21 @@ using UnityEngine;
 
 public class BananaPile : FoodSource, IInteractable
 {
-    public void Interact(GameObject user, string input)
+    public void OnDisable()
     {
-        switch (input)
+        Manager.GameManager.Instance.SetGameState(Manager.GameManager.State.Lose);
+    }
+
+    public void Interact(GameObject user)
+    {
+        if (Inputs.InteractAPress)
         {
-            case PlayerInput.Interact_A:
-                GameObject food = SpawnFood(user.transform.position);
-                user.GetComponent<Player.Controller>().GrabItem(food);
-                break;
-            case PlayerInput.Interact_B:
-                break;
-            default:
-                Debug.Log("No appropriate input");
-                return;
+            GameObject food = SpawnFood(user.transform.position);
+            user.GetComponent<Player.Controller>().GrabItem(food);
+        }
+        else if (Inputs.InteractBPress)
+        {
+
         }
     }
 }

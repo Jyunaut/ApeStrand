@@ -2,13 +2,13 @@ using UnityEngine;
 
 public class RaftObject : MonoBehaviour
 {
-    protected virtual void Start()
+    protected virtual void OnEnable()
     {
-        Manager.RaftManager.Instance.AddRaftObject(gameObject);
+        Manager.RaftManager.AddRaftObject(gameObject);
     }
 
-    protected virtual void OnDestroy()
+    protected virtual void OnDisable()
     {
-        Manager.RaftManager.Instance.RemoveRaftObject(gameObject);
+        Manager.RaftManager.RemoveRaftObject(gameObject);
     }
 }

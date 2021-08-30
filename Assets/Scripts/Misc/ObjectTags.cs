@@ -5,6 +5,12 @@ public struct Tag
     public const string Food = "Food";
 }
 
+public struct Layer
+{
+    public const string IgnorePlatform = "Ignore Platform";
+    public const string Default = "Default";
+}
+
 public enum Conditions
 {
     NearRaftEdge

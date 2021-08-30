@@ -190,8 +190,6 @@ MonoBehaviour:
   <SelectedItem>k__BackingField: {fileID: 0}
   <HeldItem>k__BackingField: {fileID: 0}
   _speed: 5
-  controlsEnabled: 1
-  canMove: 1
   nearRaftEdge: 0
   usingItem: 0
   useDuration: 0
@@ -222,5 +220,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _maxHunger: 50
-  <CurrentHunger>k__BackingField: 0
-  _hungerDecaySpeed: 0.5
+  _currentHunger: 50
+  _hungerDecaySpeed: 2

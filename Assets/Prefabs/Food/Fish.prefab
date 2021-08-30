@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: -544602939540211812}
   - component: {fileID: 3177180874554245465}
   - component: {fileID: 6660113258131554635}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Fish
   m_TagString: Food
   m_Icon: {fileID: 0}
@@ -30,7 +30,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4874407906158949375}
   m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 2.54, y: -0.31, z: 0}
   m_LocalScale: {x: 0.4055, y: 0.4773, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
