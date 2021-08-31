@@ -17,10 +17,10 @@ namespace Player
 
         [SerializeField, Range(0, 10)] private float _speed = 5f;
         private float _speedMultiplier = 1f;
-        public float Speed { get => _speed * _speedMultiplier; }
+        public float Speed => _speed * _speedMultiplier;
         public void SetSpeedMultiplier(float multiplier) => _speedMultiplier = Mathf.Clamp(multiplier, 0.1f, 4f);
 
-        public bool NearRaftEdge { get; private set; }
+        public bool IsNearRaftEdge { get; private set; }
 
         public Animator Animator             { get; private set; }
         public Rigidbody2D Rigidbody2d       { get; private set; }
@@ -98,7 +98,7 @@ namespace Player
                     break;
                 case Tag.Platform:
                     if (!(col is EdgeCollider2D)) return;
-                    NearRaftEdge = true;
+                    IsNearRaftEdge = true;
                     break;
                 default:
                     return;
@@ -115,7 +115,7 @@ namespace Player
                     break;
                 case Tag.Platform:
                     if (!(col is EdgeCollider2D)) return;
-                    NearRaftEdge = false;
+                    IsNearRaftEdge = false;
                     break;
                 default:
                     return;
@@ -144,8 +144,9 @@ namespace Player
 
         private void UseItem()
         {
-            SetState(new UsingItem(this, HeldItem.GetComponent<IInteractable>().UseDuration));
-            HeldItem.GetComponent<IInteractable>().Interact(gameObject);
+            var item = HeldItem.GetComponent<IInteractable>();
+            SetState(new UsingItem(this, item.UseDuration));
+            item.Interact(gameObject);
         }
 
         private void EnableControls()

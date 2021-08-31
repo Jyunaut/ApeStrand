@@ -6,16 +6,15 @@ public class FishSpawn : FoodSource, IInteractable
 {
     public void Interact(GameObject user)
     {
-        if (!user.GetComponent<Player.Controller>().NearRaftEdge) return;
-        
+        Player.Controller controller = user.GetComponent<Player.Controller>();
+
+        if (!controller.IsNearRaftEdge)
+            return;
+
         if (Inputs.InteractAPress)
         {
             GameObject food = SpawnFood(user.transform.position);
-            user.GetComponent<Player.Controller>().GrabItem(food);
-        }
-        else if (Inputs.InteractBPress)
-        {
-
+            controller.GrabItem(food);
         }
     }
 }

@@ -11,14 +11,7 @@ public class BananaPile : FoodSource, IInteractable
 
     public void Interact(GameObject user)
     {
-        if (Inputs.InteractAPress)
-        {
-            GameObject food = SpawnFood(user.transform.position);
-            user.GetComponent<Player.Controller>().GrabItem(food);
-        }
-        else if (Inputs.InteractBPress)
-        {
-
-        }
+        GameObject food = SpawnFood(user.transform.position);
+        user.GetComponent<Player.Controller>().GrabItem(food);
     }
 }

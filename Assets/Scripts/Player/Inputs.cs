@@ -32,9 +32,7 @@ public struct Inputs
         {
             if (!Player.Controller.ControlsEnabled || !Player.Controller.CanInteract)
                 return false;
-            if (Input.GetKey(KeyCode.Z) || Input.GetKey(KeyCode.J))
-                return true;
-            return false;
+            return Input.GetKey(KeyCode.X) || Input.GetKey(KeyCode.K);
         }
     }
     public static bool InteractBHold
@@ -43,9 +41,7 @@ public struct Inputs
         {
             if (!Player.Controller.ControlsEnabled || !Player.Controller.CanInteract)
                 return false;
-            if (Input.GetKey(KeyCode.X) || Input.GetKey(KeyCode.K))
-                return true;
-            return false;
+            return Input.GetKey(KeyCode.X) || Input.GetKey(KeyCode.K);
         }
     }
     public static bool IsPressingMovement => Mathf.Abs(Horizontal) > 0.1f || Mathf.Abs(Vertical) > 0.1f;

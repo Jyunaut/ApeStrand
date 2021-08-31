@@ -7,27 +7,24 @@ public class Food : MonoBehaviour, IInteractable
 
     public void Interact(GameObject user)
     {
-        Player.Hunger playerHunger = user.GetComponent<Player.Hunger>();
-        Player.Controller playerController = user.GetComponent<Player.Controller>();
+        Player.Hunger hunger = user.GetComponent<Player.Hunger>();
+        Player.Controller controller = user.GetComponent<Player.Controller>();
+        
         if (Inputs.InteractAPress)
         {
-            playerController.GrabItem(gameObject);
+            if (controller.HeldItem == null && controller.HeldItem != gameObject)
+            {
+                controller.GrabItem(gameObject);
+            }
         }
         else if (Inputs.InteractBPress)
         {
-            if (playerController.HeldItem == null)
+            if (controller.HeldItem == gameObject)
             {
-                return;
+                hunger.IncreaseHunger(HungerRestored);
+                controller.HeldItem = null;
+                Destroy(gameObject);
             }
-            if (playerHunger != null)
-            {
-                playerHunger.IncreaseHunger(HungerRestored);
-            }
-            if (playerController != null)
-            {
-                playerController.HeldItem = null;
-            }
-            Destroy(gameObject);
         }
     }
 }

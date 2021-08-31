@@ -16,67 +16,50 @@ namespace Player
         private Controller _controller;
         private CircleCollider2D _circleOrigin;
 
-        void Awake()
+        private void Awake()
         {
             _controller = GetComponent<Controller>();
             _circleOrigin = GetComponent<CircleCollider2D>();
         }
 
-        void Update()
+        private void Update()
         {
-            // Draw ray
-            Vector2 origin = (Vector2)transform.position + _circleOrigin.offset;
-            RaycastHit2D[] hits = Physics2D.RaycastAll(origin, _controller.Direction, _buildDistance, LayerMask.GetMask("Platform"));
-            //Debug.DrawLine(origin, (Vector2)origin + _controller.Direction, Color.red);
-
-            const float xSpace = 2.5f;
-            const float ySpace = 1.75f;
-            
-            // Check for platform edges
-            foreach (RaycastHit2D hit in hits)
+            if (Input.GetKeyDown(KeyCode.Mouse1))
             {
-                if (!(hit.collider is EdgeCollider2D)) continue;
-
-                var col = hit.collider as EdgeCollider2D;
-                // Check left and right walls
-                if (col.points[0].x == col.points[1].x)
-                {   // Right
-                    if (col.points[0].x > 0 && col.points[1].x > 0)
-                    {
-                        var pos = (Vector2)hit.collider.transform.position + new Vector2(xSpace, 0);
-                        if (Input.GetKeyDown(KeyCode.Mouse1))
-                            Instantiate(_platform, pos, Quaternion.identity);
-                        break;
-                    }
-                    // Left
-                    else
-                    {
-                        var pos = (Vector2)hit.collider.transform.position + new Vector2(-xSpace, 0);
-                        if (Input.GetKeyDown(KeyCode.Mouse1))
-                            Instantiate(_platform, pos, Quaternion.identity);
-                        break;
-                    }
-                }
-                // Check top and bottom walls
-                else
-                {   // Top
-                    if (col.points[0].y > 0.25f && col.points[1].y > 0.25f) // Hardcoded values
-                    {
-                        var pos = (Vector2)hit.collider.transform.position + new Vector2(0, ySpace);
-                        if (Input.GetKeyDown(KeyCode.Mouse1))
-                            Instantiate(_platform, pos, Quaternion.identity);
-                        break;
-                    }
-                    // Bottom
-                    else
-                    {
-                        var pos = (Vector2)hit.collider.transform.position + new Vector2(0, -ySpace);
-                        if (Input.GetKeyDown(KeyCode.Mouse1))
-                            Instantiate(_platform, pos, Quaternion.identity);
-                        break;
-                    }
-                }
+                BuildPlatform();
             }
+        }
+
+        public void BuildPlatform()
+        {
+                Vector2 origin = (Vector2)transform.position + _circleOrigin.offset;
+                RaycastHit2D hit = Physics2D.Raycast(origin, _controller.Direction, _buildDistance, LayerMask.GetMask(Tag.Platform));
+                //Debug.DrawLine(origin, (Vector2)origin + _controller.Direction, Color.red);
+
+                const float xSpace = 2.5f;
+                const float ySpace = 1.75f;
+                
+                // Check for platform edges
+                if (hit.collider is EdgeCollider2D)
+                {
+                    var col = hit.collider as EdgeCollider2D;
+                    if (col.points[0].x == col.points[1].x)
+                    {  
+                        // Check left and right walls
+                        var pos = col.points[0].x > 0 && col.points[1].x > 0
+                                ? (Vector2)col.transform.position + new Vector2(xSpace, 0)
+                                : (Vector2)col.transform.position + new Vector2(-xSpace, 0);
+                        Instantiate(_platform, pos, Quaternion.identity);
+                    }
+                    else
+                    {
+                        // Check top and bottom walls
+                        var pos = col.points[0].y > 0.25f && col.points[1].y > 0.25f
+                                ? (Vector2)col.transform.position + new Vector2(0, ySpace)
+                                : (Vector2)col.transform.position + new Vector2(0, -ySpace);
+                        Instantiate(_platform, pos, Quaternion.identity);
+                    }
+                }
         }
     }
 }

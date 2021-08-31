@@ -25,7 +25,7 @@ namespace Player
         {
             if (Inputs.IsPressingMovement)
                 Controller.SetState(new Move(Controller));
-            else if (Inputs.InteractBPress && Controller.NearRaftEdge)
+            else if (Inputs.InteractBPress && Controller.IsNearRaftEdge)
                 Controller.SetState(new PaddleMode(Controller));
         }
     }
@@ -48,7 +48,7 @@ namespace Player
         {
             if (!Inputs.IsPressingMovement)
                 Controller.SetState(new Idle(Controller));
-            else if (Inputs.InteractBPress && Controller.NearRaftEdge)
+            else if (Inputs.InteractBPress && Controller.IsNearRaftEdge)
                 Controller.SetState(new PaddleMode(Controller));
         }
 
@@ -86,18 +86,22 @@ namespace Player
             }
         }
     }
-
+    // TODO: Make paddling move based on a grid
     class Paddling : PaddleMode
     {
         private const float _defaultPaddleDistance = 0.1f;
         private const float _paddleSpeed = 5f;
-        private const float _paddleDelay = 0.1f;
         private Vector2 _direction;
-        private bool inMiddleOfPaddle;
+        private bool _inMiddleOfPaddle;
         private float _paddleDistance = _defaultPaddleDistance;
         private float _paddleTimer;
+        private const float _initialPaddleStartupTime = 0.25f;
+        private float _initialPaddleTimer;
 
-        public Paddling(Controller controller) : base(controller) {}
+        public Paddling(Controller controller) : base(controller)
+        {
+            _initialPaddleTimer = Time.time + _initialPaddleStartupTime;
+        }
 
         public override void EnterState()
         {
@@ -106,17 +110,22 @@ namespace Player
 
         public override void FixedUpdate()
         {
-            if (Inputs.IsPressingMovement && !inMiddleOfPaddle)
-                _direction = new Vector2(Inputs.Horizontal, Inputs.Vertical).normalized;
-            
-            // Keep paddling if already in mid paddle even if inputs are released
-            inMiddleOfPaddle = _paddleTimer > _paddleDelay;
-            MoveRaft(_direction);
+            if (!_inMiddleOfPaddle)
+            {
+                if (Mathf.Abs(Inputs.Horizontal) > 0.1f)
+                    _direction = new Vector2(Inputs.Horizontal, 0f).normalized;
+                else if (Mathf.Abs(Inputs.Vertical) > 0.1f)
+                    _direction = new Vector2(0f, Inputs.Vertical).normalized;
+                else
+                    _initialPaddleTimer = Time.time + _initialPaddleStartupTime;
+            }
+            if (Time.time >= _initialPaddleTimer)
+                MoveRaft(_direction);
         }
 
         public override void Transitions()
         {
-            if ((!Inputs.IsPressingMovement || !Inputs.InteractBHold) && !inMiddleOfPaddle)
+            if ((!Inputs.IsPressingMovement || !Inputs.InteractBHold) && !_inMiddleOfPaddle)
                 Controller.SetState(new PaddleMode(Controller));
         }
 
@@ -137,14 +146,17 @@ namespace Player
 
             // Paddle distance over time based on sine wave
             Vector2 e1 = _paddleDistance * Mathf.Sin(_paddleSpeed * _paddleTimer) * dir;
-            if (Mathf.Sin(_paddleSpeed * _paddleTimer) < 0F)
+            _inMiddleOfPaddle = Mathf.Sin(_paddleSpeed * _paddleTimer) >= 0f;
+            if (!_inMiddleOfPaddle)
             {
                 _paddleTimer = 0f;
-                return;
             }
-            _paddleTimer += Time.fixedDeltaTime;
-            foreach (GameObject e in Manager.RaftManager.Instance.RaftObjects)
-                e.transform.Translate(e1, Space.World);
+            else
+            {
+                foreach (GameObject e in Manager.RaftManager.Instance.RaftObjects)
+                    e.transform.Translate(e1, Space.World);
+                _paddleTimer += Time.deltaTime;
+            }
         }
     }
 
@@ -165,14 +177,12 @@ namespace Player
 
         public override void Transitions()
         {
-            if (_useDuration > 0) return;
-
-            if (Inputs.IsPressingMovement)
+            if (_useDuration > 0)
+                _useDuration -= Time.deltaTime;
+            else if (Inputs.IsPressingMovement)
                 Controller.SetState(new Idle(Controller));
             else if (!Inputs.IsPressingMovement)
                 Controller.SetState(new Move(Controller));
-                
-            _useDuration -= Time.deltaTime;
         }
     }
 }
