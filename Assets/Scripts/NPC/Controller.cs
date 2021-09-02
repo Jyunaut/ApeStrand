@@ -5,20 +5,24 @@ using System;
 
 namespace NPC
 {
+    [RequireComponent(typeof(PathfindingHandler))]
     public class Controller : MonoBehaviour
     {
-        public List<Phase> Phases;
-
-        [field: SerializeField] public Phase CurrentPhase       { get; set; }
-        [field: SerializeField] public Action CurrentAction     { get; set; }
-        [field: SerializeField] public int PhasesTraversed      { get; set; }
-        [field: SerializeField] public int ActionsTraversed     { get; set; }
+        [field: SerializeField] public List<Phase> Phases        { get; set; }
+        [field: SerializeField] private Phase CurrentPhase       { get; set; }
+        [field: SerializeField] private Action CurrentAction     { get; set; }
+        [field: SerializeField] private int PhasesTraversed      { get; set; }
+        [field: SerializeField] private int ActionsTraversed     { get; set; }
 
         private void Awake()
         {
             foreach (Phase phase in Phases)
                 foreach (Action action in phase.Actions)
+                {
                     action.Controller = this;
+                    action.SetAction();
+                }
+                    
             ActionsTraversed = PhasesTraversed = 0;
         }
 
@@ -31,7 +35,7 @@ namespace NPC
             }
             catch(Exception e)
             {
-                Debug.Log($"Missing NPC phases/actions {e}");
+                Debug.Log($"Missing NPC phases/actions on start {e}");
             }
         }
 
@@ -71,6 +75,11 @@ namespace NPC
                 SetPhase(Phases[PhasesTraversed = 0]);
                 SetAction(CurrentPhase.Actions[ActionsTraversed = 0]);
             }
+        }
+
+        private void Stunned()
+        {
+            // Reset phases and actions traversed and play stunned action
         }
 
         private void SetAction(Action action)
